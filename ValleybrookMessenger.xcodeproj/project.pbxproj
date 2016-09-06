@@ -1,0 +1,522 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		DBCE97C91D7F10D300B93AED /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCE97C81D7F10D300B93AED /* AppDelegate.swift */; };
+		DBCE97CB1D7F10D300B93AED /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCE97CA1D7F10D300B93AED /* ViewController.swift */; };
+		DBCE97CE1D7F10D300B93AED /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DBCE97CC1D7F10D300B93AED /* Main.storyboard */; };
+		DBCE97D11D7F10D300B93AED /* ValleybrookMessenger.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DBCE97CF1D7F10D300B93AED /* ValleybrookMessenger.xcdatamodeld */; };
+		DBCE97D31D7F10D300B93AED /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DBCE97D21D7F10D300B93AED /* Assets.xcassets */; };
+		DBCE97D61D7F10D300B93AED /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DBCE97D41D7F10D300B93AED /* LaunchScreen.storyboard */; };
+		DBCE97E11D7F10D300B93AED /* ValleybrookMessengerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCE97E01D7F10D300B93AED /* ValleybrookMessengerTests.swift */; };
+		DBCE97EC1D7F10D300B93AED /* ValleybrookMessengerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCE97EB1D7F10D300B93AED /* ValleybrookMessengerUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DBCE97DD1D7F10D300B93AED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DBCE97BD1D7F10D200B93AED /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DBCE97C41D7F10D200B93AED;
+			remoteInfo = ValleybrookMessenger;
+		};
+		DBCE97E81D7F10D300B93AED /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DBCE97BD1D7F10D200B93AED /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DBCE97C41D7F10D200B93AED;
+			remoteInfo = ValleybrookMessenger;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		DBCE97C51D7F10D200B93AED /* ValleybrookMessenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ValleybrookMessenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DBCE97C81D7F10D300B93AED /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		DBCE97CA1D7F10D300B93AED /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		DBCE97CD1D7F10D300B93AED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		DBCE97D01D7F10D300B93AED /* ValleybrookMessenger.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ValleybrookMessenger.xcdatamodel; sourceTree = "<group>"; };
+		DBCE97D21D7F10D300B93AED /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DBCE97D51D7F10D300B93AED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		DBCE97D71D7F10D300B93AED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DBCE97DC1D7F10D300B93AED /* ValleybrookMessengerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ValleybrookMessengerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DBCE97E01D7F10D300B93AED /* ValleybrookMessengerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValleybrookMessengerTests.swift; sourceTree = "<group>"; };
+		DBCE97E21D7F10D300B93AED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DBCE97E71D7F10D300B93AED /* ValleybrookMessengerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ValleybrookMessengerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DBCE97EB1D7F10D300B93AED /* ValleybrookMessengerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValleybrookMessengerUITests.swift; sourceTree = "<group>"; };
+		DBCE97ED1D7F10D300B93AED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DBCE97C21D7F10D200B93AED /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DBCE97D91D7F10D300B93AED /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DBCE97E41D7F10D300B93AED /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		DBCE97BC1D7F10D200B93AED = {
+			isa = PBXGroup;
+			children = (
+				DBCE97C71D7F10D300B93AED /* ValleybrookMessenger */,
+				DBCE97DF1D7F10D300B93AED /* ValleybrookMessengerTests */,
+				DBCE97EA1D7F10D300B93AED /* ValleybrookMessengerUITests */,
+				DBCE97C61D7F10D200B93AED /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DBCE97C61D7F10D200B93AED /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DBCE97C51D7F10D200B93AED /* ValleybrookMessenger.app */,
+				DBCE97DC1D7F10D300B93AED /* ValleybrookMessengerTests.xctest */,
+				DBCE97E71D7F10D300B93AED /* ValleybrookMessengerUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DBCE97C71D7F10D300B93AED /* ValleybrookMessenger */ = {
+			isa = PBXGroup;
+			children = (
+				DBCE97C81D7F10D300B93AED /* AppDelegate.swift */,
+				DBCE97CA1D7F10D300B93AED /* ViewController.swift */,
+				DBCE97CC1D7F10D300B93AED /* Main.storyboard */,
+				DBCE97D21D7F10D300B93AED /* Assets.xcassets */,
+				DBCE97D41D7F10D300B93AED /* LaunchScreen.storyboard */,
+				DBCE97D71D7F10D300B93AED /* Info.plist */,
+				DBCE97CF1D7F10D300B93AED /* ValleybrookMessenger.xcdatamodeld */,
+			);
+			path = ValleybrookMessenger;
+			sourceTree = "<group>";
+		};
+		DBCE97DF1D7F10D300B93AED /* ValleybrookMessengerTests */ = {
+			isa = PBXGroup;
+			children = (
+				DBCE97E01D7F10D300B93AED /* ValleybrookMessengerTests.swift */,
+				DBCE97E21D7F10D300B93AED /* Info.plist */,
+			);
+			path = ValleybrookMessengerTests;
+			sourceTree = "<group>";
+		};
+		DBCE97EA1D7F10D300B93AED /* ValleybrookMessengerUITests */ = {
+			isa = PBXGroup;
+			children = (
+				DBCE97EB1D7F10D300B93AED /* ValleybrookMessengerUITests.swift */,
+				DBCE97ED1D7F10D300B93AED /* Info.plist */,
+			);
+			path = ValleybrookMessengerUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		DBCE97C41D7F10D200B93AED /* ValleybrookMessenger */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DBCE97F01D7F10D300B93AED /* Build configuration list for PBXNativeTarget "ValleybrookMessenger" */;
+			buildPhases = (
+				DBCE97C11D7F10D200B93AED /* Sources */,
+				DBCE97C21D7F10D200B93AED /* Frameworks */,
+				DBCE97C31D7F10D200B93AED /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ValleybrookMessenger;
+			productName = ValleybrookMessenger;
+			productReference = DBCE97C51D7F10D200B93AED /* ValleybrookMessenger.app */;
+			productType = "com.apple.product-type.application";
+		};
+		DBCE97DB1D7F10D300B93AED /* ValleybrookMessengerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DBCE97F31D7F10D300B93AED /* Build configuration list for PBXNativeTarget "ValleybrookMessengerTests" */;
+			buildPhases = (
+				DBCE97D81D7F10D300B93AED /* Sources */,
+				DBCE97D91D7F10D300B93AED /* Frameworks */,
+				DBCE97DA1D7F10D300B93AED /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DBCE97DE1D7F10D300B93AED /* PBXTargetDependency */,
+			);
+			name = ValleybrookMessengerTests;
+			productName = ValleybrookMessengerTests;
+			productReference = DBCE97DC1D7F10D300B93AED /* ValleybrookMessengerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		DBCE97E61D7F10D300B93AED /* ValleybrookMessengerUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DBCE97F61D7F10D300B93AED /* Build configuration list for PBXNativeTarget "ValleybrookMessengerUITests" */;
+			buildPhases = (
+				DBCE97E31D7F10D300B93AED /* Sources */,
+				DBCE97E41D7F10D300B93AED /* Frameworks */,
+				DBCE97E51D7F10D300B93AED /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DBCE97E91D7F10D300B93AED /* PBXTargetDependency */,
+			);
+			name = ValleybrookMessengerUITests;
+			productName = ValleybrookMessengerUITests;
+			productReference = DBCE97E71D7F10D300B93AED /* ValleybrookMessengerUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DBCE97BD1D7F10D200B93AED /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0730;
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = "Adam Zarn";
+				TargetAttributes = {
+					DBCE97C41D7F10D200B93AED = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+					DBCE97DB1D7F10D300B93AED = {
+						CreatedOnToolsVersion = 7.3.1;
+						TestTargetID = DBCE97C41D7F10D200B93AED;
+					};
+					DBCE97E61D7F10D300B93AED = {
+						CreatedOnToolsVersion = 7.3.1;
+						TestTargetID = DBCE97C41D7F10D200B93AED;
+					};
+				};
+			};
+			buildConfigurationList = DBCE97C01D7F10D200B93AED /* Build configuration list for PBXProject "ValleybrookMessenger" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = DBCE97BC1D7F10D200B93AED;
+			productRefGroup = DBCE97C61D7F10D200B93AED /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DBCE97C41D7F10D200B93AED /* ValleybrookMessenger */,
+				DBCE97DB1D7F10D300B93AED /* ValleybrookMessengerTests */,
+				DBCE97E61D7F10D300B93AED /* ValleybrookMessengerUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DBCE97C31D7F10D200B93AED /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DBCE97D61D7F10D300B93AED /* LaunchScreen.storyboard in Resources */,
+				DBCE97D31D7F10D300B93AED /* Assets.xcassets in Resources */,
+				DBCE97CE1D7F10D300B93AED /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DBCE97DA1D7F10D300B93AED /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DBCE97E51D7F10D300B93AED /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DBCE97C11D7F10D200B93AED /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DBCE97CB1D7F10D300B93AED /* ViewController.swift in Sources */,
+				DBCE97C91D7F10D300B93AED /* AppDelegate.swift in Sources */,
+				DBCE97D11D7F10D300B93AED /* ValleybrookMessenger.xcdatamodeld in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DBCE97D81D7F10D300B93AED /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DBCE97E11D7F10D300B93AED /* ValleybrookMessengerTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DBCE97E31D7F10D300B93AED /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DBCE97EC1D7F10D300B93AED /* ValleybrookMessengerUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DBCE97DE1D7F10D300B93AED /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DBCE97C41D7F10D200B93AED /* ValleybrookMessenger */;
+			targetProxy = DBCE97DD1D7F10D300B93AED /* PBXContainerItemProxy */;
+		};
+		DBCE97E91D7F10D300B93AED /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DBCE97C41D7F10D200B93AED /* ValleybrookMessenger */;
+			targetProxy = DBCE97E81D7F10D300B93AED /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		DBCE97CC1D7F10D300B93AED /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DBCE97CD1D7F10D300B93AED /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		DBCE97D41D7F10D300B93AED /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DBCE97D51D7F10D300B93AED /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		DBCE97EE1D7F10D300B93AED /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		DBCE97EF1D7F10D300B93AED /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		DBCE97F11D7F10D300B93AED /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = ValleybrookMessenger/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = AJZ.ValleybrookMessenger;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		DBCE97F21D7F10D300B93AED /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = ValleybrookMessenger/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = AJZ.ValleybrookMessenger;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		DBCE97F41D7F10D300B93AED /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = ValleybrookMessengerTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = AJZ.ValleybrookMessengerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ValleybrookMessenger.app/ValleybrookMessenger";
+			};
+			name = Debug;
+		};
+		DBCE97F51D7F10D300B93AED /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = ValleybrookMessengerTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = AJZ.ValleybrookMessengerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ValleybrookMessenger.app/ValleybrookMessenger";
+			};
+			name = Release;
+		};
+		DBCE97F71D7F10D300B93AED /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = ValleybrookMessengerUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = AJZ.ValleybrookMessengerUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = ValleybrookMessenger;
+			};
+			name = Debug;
+		};
+		DBCE97F81D7F10D300B93AED /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = ValleybrookMessengerUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = AJZ.ValleybrookMessengerUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = ValleybrookMessenger;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		DBCE97C01D7F10D200B93AED /* Build configuration list for PBXProject "ValleybrookMessenger" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DBCE97EE1D7F10D300B93AED /* Debug */,
+				DBCE97EF1D7F10D300B93AED /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DBCE97F01D7F10D300B93AED /* Build configuration list for PBXNativeTarget "ValleybrookMessenger" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DBCE97F11D7F10D300B93AED /* Debug */,
+				DBCE97F21D7F10D300B93AED /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		DBCE97F31D7F10D300B93AED /* Build configuration list for PBXNativeTarget "ValleybrookMessengerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DBCE97F41D7F10D300B93AED /* Debug */,
+				DBCE97F51D7F10D300B93AED /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		DBCE97F61D7F10D300B93AED /* Build configuration list for PBXNativeTarget "ValleybrookMessengerUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DBCE97F71D7F10D300B93AED /* Debug */,
+				DBCE97F81D7F10D300B93AED /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		DBCE97CF1D7F10D300B93AED /* ValleybrookMessenger.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				DBCE97D01D7F10D300B93AED /* ValleybrookMessenger.xcdatamodel */,
+			);
+			currentVersion = DBCE97D01D7F10D300B93AED /* ValleybrookMessenger.xcdatamodel */;
+			path = ValleybrookMessenger.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = DBCE97BD1D7F10D200B93AED /* Project object */;
+}
