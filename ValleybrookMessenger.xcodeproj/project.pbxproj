@@ -7,14 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DB4D5F751D809E690028E182 /* MyTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4D5F741D809E690028E182 /* MyTextField.swift */; };
 		DBCE97C91D7F10D300B93AED /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCE97C81D7F10D300B93AED /* AppDelegate.swift */; };
-		DBCE97CB1D7F10D300B93AED /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCE97CA1D7F10D300B93AED /* ViewController.swift */; };
 		DBCE97CE1D7F10D300B93AED /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DBCE97CC1D7F10D300B93AED /* Main.storyboard */; };
 		DBCE97D11D7F10D300B93AED /* ValleybrookMessenger.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DBCE97CF1D7F10D300B93AED /* ValleybrookMessenger.xcdatamodeld */; };
 		DBCE97D31D7F10D300B93AED /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DBCE97D21D7F10D300B93AED /* Assets.xcassets */; };
 		DBCE97D61D7F10D300B93AED /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DBCE97D41D7F10D300B93AED /* LaunchScreen.storyboard */; };
 		DBCE97E11D7F10D300B93AED /* ValleybrookMessengerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCE97E01D7F10D300B93AED /* ValleybrookMessengerTests.swift */; };
 		DBCE97EC1D7F10D300B93AED /* ValleybrookMessengerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCE97EB1D7F10D300B93AED /* ValleybrookMessengerUITests.swift */; };
+		DBCE97FA1D7F27F100B93AED /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCE97F91D7F27F100B93AED /* LoginViewController.swift */; };
+		DBCE97FC1D7F29FD00B93AED /* CreateProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCE97FB1D7F29FD00B93AED /* CreateProfileViewController.swift */; };
+		DBCE97FE1D7F375200B93AED /* CustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCE97FD1D7F375200B93AED /* CustomCell.swift */; };
+		DBCE98001D7F385F00B93AED /* SubscriptionsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCE97FF1D7F385F00B93AED /* SubscriptionsTableViewController.swift */; };
+		DBCE98021D7F4FFE00B93AED /* ConfigureMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCE98011D7F4FFE00B93AED /* ConfigureMessageViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,9 +40,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DB4D5F741D809E690028E182 /* MyTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyTextField.swift; sourceTree = "<group>"; };
 		DBCE97C51D7F10D200B93AED /* ValleybrookMessenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ValleybrookMessenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBCE97C81D7F10D300B93AED /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		DBCE97CA1D7F10D300B93AED /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		DBCE97CD1D7F10D300B93AED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		DBCE97D01D7F10D300B93AED /* ValleybrookMessenger.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ValleybrookMessenger.xcdatamodel; sourceTree = "<group>"; };
 		DBCE97D21D7F10D300B93AED /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -49,6 +54,11 @@
 		DBCE97E71D7F10D300B93AED /* ValleybrookMessengerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ValleybrookMessengerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBCE97EB1D7F10D300B93AED /* ValleybrookMessengerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValleybrookMessengerUITests.swift; sourceTree = "<group>"; };
 		DBCE97ED1D7F10D300B93AED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DBCE97F91D7F27F100B93AED /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		DBCE97FB1D7F29FD00B93AED /* CreateProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateProfileViewController.swift; sourceTree = "<group>"; };
+		DBCE97FD1D7F375200B93AED /* CustomCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCell.swift; sourceTree = "<group>"; };
+		DBCE97FF1D7F385F00B93AED /* SubscriptionsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubscriptionsTableViewController.swift; sourceTree = "<group>"; };
+		DBCE98011D7F4FFE00B93AED /* ConfigureMessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigureMessageViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,12 +110,17 @@
 			isa = PBXGroup;
 			children = (
 				DBCE97C81D7F10D300B93AED /* AppDelegate.swift */,
-				DBCE97CA1D7F10D300B93AED /* ViewController.swift */,
+				DBCE97F91D7F27F100B93AED /* LoginViewController.swift */,
+				DBCE97FB1D7F29FD00B93AED /* CreateProfileViewController.swift */,
+				DBCE97FD1D7F375200B93AED /* CustomCell.swift */,
+				DBCE97FF1D7F385F00B93AED /* SubscriptionsTableViewController.swift */,
+				DBCE98011D7F4FFE00B93AED /* ConfigureMessageViewController.swift */,
 				DBCE97CC1D7F10D300B93AED /* Main.storyboard */,
 				DBCE97D21D7F10D300B93AED /* Assets.xcassets */,
 				DBCE97D41D7F10D300B93AED /* LaunchScreen.storyboard */,
 				DBCE97D71D7F10D300B93AED /* Info.plist */,
 				DBCE97CF1D7F10D300B93AED /* ValleybrookMessenger.xcdatamodeld */,
+				DB4D5F741D809E690028E182 /* MyTextField.swift */,
 			);
 			path = ValleybrookMessenger;
 			sourceTree = "<group>";
@@ -259,8 +274,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DBCE97CB1D7F10D300B93AED /* ViewController.swift in Sources */,
+				DBCE98001D7F385F00B93AED /* SubscriptionsTableViewController.swift in Sources */,
+				DB4D5F751D809E690028E182 /* MyTextField.swift in Sources */,
+				DBCE97FA1D7F27F100B93AED /* LoginViewController.swift in Sources */,
 				DBCE97C91D7F10D300B93AED /* AppDelegate.swift in Sources */,
+				DBCE98021D7F4FFE00B93AED /* ConfigureMessageViewController.swift in Sources */,
+				DBCE97FC1D7F29FD00B93AED /* CreateProfileViewController.swift in Sources */,
+				DBCE97FE1D7F375200B93AED /* CustomCell.swift in Sources */,
 				DBCE97D11D7F10D300B93AED /* ValleybrookMessenger.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -486,6 +506,7 @@
 				DBCE97F21D7F10D300B93AED /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		DBCE97F31D7F10D300B93AED /* Build configuration list for PBXNativeTarget "ValleybrookMessengerTests" */ = {
 			isa = XCConfigurationList;
@@ -494,6 +515,7 @@
 				DBCE97F51D7F10D300B93AED /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		DBCE97F61D7F10D300B93AED /* Build configuration list for PBXNativeTarget "ValleybrookMessengerUITests" */ = {
 			isa = XCConfigurationList;
@@ -502,6 +524,7 @@
 				DBCE97F81D7F10D300B93AED /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
