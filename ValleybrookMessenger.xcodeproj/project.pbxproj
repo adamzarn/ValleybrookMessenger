@@ -7,7 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AC6E125ACD2EC0F201BD7444 /* Pods_ValleybrookMessenger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB0619B6D311BFCB02E5580D /* Pods_ValleybrookMessenger.framework */; };
+		B892A88457621C565113FE3C /* Pods_ValleybrookMessengerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32E9965037BC0E3B2394014C /* Pods_ValleybrookMessengerTests.framework */; };
+		C48E6A43B6E1A00B53C43CBA /* Pods_ValleybrookMessengerUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DF9B86DA24FBEB72ACA5A27 /* Pods_ValleybrookMessengerUITests.framework */; };
 		DB4D5F751D809E690028E182 /* MyTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4D5F741D809E690028E182 /* MyTextField.swift */; };
+		DB4D5F791D80BB5B0028E182 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DB4D5F781D80BB5B0028E182 /* GoogleService-Info.plist */; };
+		DB7D3CDC1D80FE7700C3A3A4 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7D3CDB1D80FE7700C3A3A4 /* AppState.swift */; };
+		DB7D3CDE1D80FEC700C3A3A4 /* MeasurementHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7D3CDD1D80FEC700C3A3A4 /* MeasurementHelper.swift */; };
+		DB7D3CE01D80FF5200C3A3A4 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7D3CDF1D80FF5200C3A3A4 /* Constants.swift */; };
+		DB7D3CE21D8110B300C3A3A4 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7D3CE11D8110B300C3A3A4 /* User.swift */; };
+		DB7D3CE51D81BA4200C3A3A4 /* GroupsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7D3CE41D81BA4200C3A3A4 /* GroupsTableViewController.swift */; };
 		DBCE97C91D7F10D300B93AED /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCE97C81D7F10D300B93AED /* AppDelegate.swift */; };
 		DBCE97CE1D7F10D300B93AED /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DBCE97CC1D7F10D300B93AED /* Main.storyboard */; };
 		DBCE97D11D7F10D300B93AED /* ValleybrookMessenger.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DBCE97CF1D7F10D300B93AED /* ValleybrookMessenger.xcdatamodeld */; };
@@ -40,7 +49,22 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		32E9965037BC0E3B2394014C /* Pods_ValleybrookMessengerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ValleybrookMessengerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		503D3E0EB8BBBC7031BFC348 /* Pods-ValleybrookMessengerTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ValleybrookMessengerTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ValleybrookMessengerTests/Pods-ValleybrookMessengerTests.release.xcconfig"; sourceTree = "<group>"; };
+		56A0F77B23B3AB6F2573DC89 /* Pods-ValleybrookMessenger.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ValleybrookMessenger.release.xcconfig"; path = "Pods/Target Support Files/Pods-ValleybrookMessenger/Pods-ValleybrookMessenger.release.xcconfig"; sourceTree = "<group>"; };
+		6792533CE17AA8671734EFD5 /* Pods-ValleybrookMessenger.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ValleybrookMessenger.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ValleybrookMessenger/Pods-ValleybrookMessenger.debug.xcconfig"; sourceTree = "<group>"; };
+		6E8B989B9491298F94524A61 /* Pods-ValleybrookMessengerUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ValleybrookMessengerUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ValleybrookMessengerUITests/Pods-ValleybrookMessengerUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		9DF9B86DA24FBEB72ACA5A27 /* Pods_ValleybrookMessengerUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ValleybrookMessengerUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C31F818CB7A6B548D6BB703D /* Pods-ValleybrookMessengerUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ValleybrookMessengerUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ValleybrookMessengerUITests/Pods-ValleybrookMessengerUITests.release.xcconfig"; sourceTree = "<group>"; };
+		DB0619B6D311BFCB02E5580D /* Pods_ValleybrookMessenger.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ValleybrookMessenger.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB4D5F741D809E690028E182 /* MyTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyTextField.swift; sourceTree = "<group>"; };
+		DB4D5F781D80BB5B0028E182 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		DB7D3CDB1D80FE7700C3A3A4 /* AppState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		DB7D3CDD1D80FEC700C3A3A4 /* MeasurementHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeasurementHelper.swift; sourceTree = "<group>"; };
+		DB7D3CDF1D80FF5200C3A3A4 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		DB7D3CE11D8110B300C3A3A4 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		DB7D3CE31D8111C800C3A3A4 /* VM-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "VM-Bridging-Header.h"; sourceTree = "<group>"; };
+		DB7D3CE41D81BA4200C3A3A4 /* GroupsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupsTableViewController.swift; sourceTree = "<group>"; };
 		DBCE97C51D7F10D200B93AED /* ValleybrookMessenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ValleybrookMessenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBCE97C81D7F10D300B93AED /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DBCE97CD1D7F10D300B93AED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -59,6 +83,7 @@
 		DBCE97FD1D7F375200B93AED /* CustomCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomCell.swift; sourceTree = "<group>"; };
 		DBCE97FF1D7F385F00B93AED /* SubscriptionsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubscriptionsTableViewController.swift; sourceTree = "<group>"; };
 		DBCE98011D7F4FFE00B93AED /* ConfigureMessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigureMessageViewController.swift; sourceTree = "<group>"; };
+		F638BEEAE94074440C448182 /* Pods-ValleybrookMessengerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ValleybrookMessengerTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ValleybrookMessengerTests/Pods-ValleybrookMessengerTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +91,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AC6E125ACD2EC0F201BD7444 /* Pods_ValleybrookMessenger.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,6 +99,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B892A88457621C565113FE3C /* Pods_ValleybrookMessengerTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,12 +107,36 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C48E6A43B6E1A00B53C43CBA /* Pods_ValleybrookMessengerUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		637887A4ACA7F757949C4A35 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				6792533CE17AA8671734EFD5 /* Pods-ValleybrookMessenger.debug.xcconfig */,
+				56A0F77B23B3AB6F2573DC89 /* Pods-ValleybrookMessenger.release.xcconfig */,
+				F638BEEAE94074440C448182 /* Pods-ValleybrookMessengerTests.debug.xcconfig */,
+				503D3E0EB8BBBC7031BFC348 /* Pods-ValleybrookMessengerTests.release.xcconfig */,
+				6E8B989B9491298F94524A61 /* Pods-ValleybrookMessengerUITests.debug.xcconfig */,
+				C31F818CB7A6B548D6BB703D /* Pods-ValleybrookMessengerUITests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		AF8F613BDF81660645DB183A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DB0619B6D311BFCB02E5580D /* Pods_ValleybrookMessenger.framework */,
+				32E9965037BC0E3B2394014C /* Pods_ValleybrookMessengerTests.framework */,
+				9DF9B86DA24FBEB72ACA5A27 /* Pods_ValleybrookMessengerUITests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		DBCE97BC1D7F10D200B93AED = {
 			isa = PBXGroup;
 			children = (
@@ -93,6 +144,8 @@
 				DBCE97DF1D7F10D300B93AED /* ValleybrookMessengerTests */,
 				DBCE97EA1D7F10D300B93AED /* ValleybrookMessengerUITests */,
 				DBCE97C61D7F10D200B93AED /* Products */,
+				637887A4ACA7F757949C4A35 /* Pods */,
+				AF8F613BDF81660645DB183A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -115,12 +168,19 @@
 				DBCE97FD1D7F375200B93AED /* CustomCell.swift */,
 				DBCE97FF1D7F385F00B93AED /* SubscriptionsTableViewController.swift */,
 				DBCE98011D7F4FFE00B93AED /* ConfigureMessageViewController.swift */,
+				DB7D3CE41D81BA4200C3A3A4 /* GroupsTableViewController.swift */,
 				DBCE97CC1D7F10D300B93AED /* Main.storyboard */,
 				DBCE97D21D7F10D300B93AED /* Assets.xcassets */,
 				DBCE97D41D7F10D300B93AED /* LaunchScreen.storyboard */,
 				DBCE97D71D7F10D300B93AED /* Info.plist */,
 				DBCE97CF1D7F10D300B93AED /* ValleybrookMessenger.xcdatamodeld */,
 				DB4D5F741D809E690028E182 /* MyTextField.swift */,
+				DB4D5F781D80BB5B0028E182 /* GoogleService-Info.plist */,
+				DB7D3CDB1D80FE7700C3A3A4 /* AppState.swift */,
+				DB7D3CDD1D80FEC700C3A3A4 /* MeasurementHelper.swift */,
+				DB7D3CDF1D80FF5200C3A3A4 /* Constants.swift */,
+				DB7D3CE11D8110B300C3A3A4 /* User.swift */,
+				DB7D3CE31D8111C800C3A3A4 /* VM-Bridging-Header.h */,
 			);
 			path = ValleybrookMessenger;
 			sourceTree = "<group>";
@@ -150,9 +210,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DBCE97F01D7F10D300B93AED /* Build configuration list for PBXNativeTarget "ValleybrookMessenger" */;
 			buildPhases = (
+				663BC99BB781D50180C34FC0 /* [CP] Check Pods Manifest.lock */,
 				DBCE97C11D7F10D200B93AED /* Sources */,
 				DBCE97C21D7F10D200B93AED /* Frameworks */,
 				DBCE97C31D7F10D200B93AED /* Resources */,
+				1730D59B6D492F69859A471B /* [CP] Embed Pods Frameworks */,
+				A67EE5847AAD7A21BE74E3A2 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -167,9 +230,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DBCE97F31D7F10D300B93AED /* Build configuration list for PBXNativeTarget "ValleybrookMessengerTests" */;
 			buildPhases = (
+				9E8B4E03DA1D16BB5A735520 /* [CP] Check Pods Manifest.lock */,
 				DBCE97D81D7F10D300B93AED /* Sources */,
 				DBCE97D91D7F10D300B93AED /* Frameworks */,
 				DBCE97DA1D7F10D300B93AED /* Resources */,
+				19DA5FCD3D2A9EBA13273731 /* [CP] Embed Pods Frameworks */,
+				C04216645A30A0D49CEDDC71 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -185,9 +251,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = DBCE97F61D7F10D300B93AED /* Build configuration list for PBXNativeTarget "ValleybrookMessengerUITests" */;
 			buildPhases = (
+				D709909E858BAB969CF3B275 /* [CP] Check Pods Manifest.lock */,
 				DBCE97E31D7F10D300B93AED /* Sources */,
 				DBCE97E41D7F10D300B93AED /* Frameworks */,
 				DBCE97E51D7F10D300B93AED /* Resources */,
+				5DD2EB09097D778FC580891F /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -248,6 +316,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DBCE97D61D7F10D300B93AED /* LaunchScreen.storyboard in Resources */,
+				DB4D5F791D80BB5B0028E182 /* GoogleService-Info.plist in Resources */,
 				DBCE97D31D7F10D300B93AED /* Assets.xcassets in Resources */,
 				DBCE97CE1D7F10D300B93AED /* Main.storyboard in Resources */,
 			);
@@ -269,16 +338,144 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		1730D59B6D492F69859A471B /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ValleybrookMessenger/Pods-ValleybrookMessenger-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		19DA5FCD3D2A9EBA13273731 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ValleybrookMessengerTests/Pods-ValleybrookMessengerTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5DD2EB09097D778FC580891F /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ValleybrookMessengerUITests/Pods-ValleybrookMessengerUITests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		663BC99BB781D50180C34FC0 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		9E8B4E03DA1D16BB5A735520 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		A67EE5847AAD7A21BE74E3A2 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ValleybrookMessenger/Pods-ValleybrookMessenger-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C04216645A30A0D49CEDDC71 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ValleybrookMessengerTests/Pods-ValleybrookMessengerTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D709909E858BAB969CF3B275 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		DBCE97C11D7F10D200B93AED /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				DBCE98001D7F385F00B93AED /* SubscriptionsTableViewController.swift in Sources */,
+				DB7D3CE01D80FF5200C3A3A4 /* Constants.swift in Sources */,
+				DB7D3CE51D81BA4200C3A3A4 /* GroupsTableViewController.swift in Sources */,
 				DB4D5F751D809E690028E182 /* MyTextField.swift in Sources */,
 				DBCE97FA1D7F27F100B93AED /* LoginViewController.swift in Sources */,
+				DB7D3CDC1D80FE7700C3A3A4 /* AppState.swift in Sources */,
 				DBCE97C91D7F10D300B93AED /* AppDelegate.swift in Sources */,
 				DBCE98021D7F4FFE00B93AED /* ConfigureMessageViewController.swift in Sources */,
+				DB7D3CDE1D80FEC700C3A3A4 /* MeasurementHelper.swift in Sources */,
+				DB7D3CE21D8110B300C3A3A4 /* User.swift in Sources */,
 				DBCE97FC1D7F29FD00B93AED /* CreateProfileViewController.swift in Sources */,
 				DBCE97FE1D7F375200B93AED /* CustomCell.swift in Sources */,
 				DBCE97D11D7F10D300B93AED /* ValleybrookMessenger.xcdatamodeld in Sources */,
@@ -421,6 +618,7 @@
 		};
 		DBCE97F11D7F10D300B93AED /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6792533CE17AA8671734EFD5 /* Pods-ValleybrookMessenger.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = ValleybrookMessenger/Info.plist;
@@ -432,6 +630,7 @@
 		};
 		DBCE97F21D7F10D300B93AED /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 56A0F77B23B3AB6F2573DC89 /* Pods-ValleybrookMessenger.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = ValleybrookMessenger/Info.plist;
@@ -443,6 +642,7 @@
 		};
 		DBCE97F41D7F10D300B93AED /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F638BEEAE94074440C448182 /* Pods-ValleybrookMessengerTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = ValleybrookMessengerTests/Info.plist;
@@ -455,6 +655,7 @@
 		};
 		DBCE97F51D7F10D300B93AED /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 503D3E0EB8BBBC7031BFC348 /* Pods-ValleybrookMessengerTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = ValleybrookMessengerTests/Info.plist;
@@ -467,6 +668,7 @@
 		};
 		DBCE97F71D7F10D300B93AED /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6E8B989B9491298F94524A61 /* Pods-ValleybrookMessengerUITests.debug.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = ValleybrookMessengerUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -478,6 +680,7 @@
 		};
 		DBCE97F81D7F10D300B93AED /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C31F818CB7A6B548D6BB703D /* Pods-ValleybrookMessengerUITests.release.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = ValleybrookMessengerUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

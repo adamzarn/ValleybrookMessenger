@@ -8,12 +8,24 @@
 
 import UIKit
 import CoreData
+import Firebase
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    
+    var uid: String?
+    var email: String?
+    var phone: String?
+    
+    let lightValleybrookBlue = UIColor(red: 125.0 / 255.0, green: 225.0 / 255.0, blue: 222.0 / 255.0, alpha: 1.0)
+    let darkValleybrookBlue = UIColor(red: 48.0 / 255.0, green: 76.0 / 255.0, blue: 138.0 / 255.0, alpha: 1.0)
+    
+    override init() {
+        super.init()
+        FIRApp.configure()
+    }
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.

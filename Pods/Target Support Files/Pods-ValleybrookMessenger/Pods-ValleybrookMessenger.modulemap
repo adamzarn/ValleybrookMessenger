@@ -1,0 +1,6 @@
+framework module Pods_ValleybrookMessenger {
+  umbrella header "Pods-ValleybrookMessenger-umbrella.h"
+
+  export *
+  module * { export * }
+}

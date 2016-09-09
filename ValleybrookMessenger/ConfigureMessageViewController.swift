@@ -8,8 +8,11 @@
 
 import UIKit
 import MessageUI
+import Firebase
 
 class ConfigureMessageViewController: UIViewController, MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate, UITextFieldDelegate, UITextViewDelegate {
+    
+    let ref = FIRDatabase.database().reference()
     
     @IBOutlet weak var myTableView: UITableView!
     
@@ -24,16 +27,25 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
     let sendMailErrorAlert = UIAlertController(title: "Cannot Send Email", message: "Your device cannot send e-mail. Please check e-mail configuration and try again.", preferredStyle: UIAlertControllerStyle.Alert)
     let sendTextErrorAlert = UIAlertController(title: "Cannot Send Text", message: "Your device cannot send texts. Please check text configuration and try again.", preferredStyle: UIAlertControllerStyle.Alert)
     
-    let groups = ["Food Pantry"
-        ,"Facilities Teardown"
-        ,"Tech Teardown"
-        ,"Prayer"
-        ,"Worship Team"
-        ,"Small Groups"]
+    var groups: [String] = []
     
-    
+    func updateGroups() {
+        self.ref.observeSingleEventOfType(.Value, withBlock: { snapshot in
+            self.groups = []
+            let groupsChild = snapshot.value!["Groups"] as! NSDictionary
+            self.groups = groupsChild.allValues as! [String]
+            
+            self.myTableView.reloadData()
+        })
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        updateGroups()
+        
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
         sendMailErrorAlert.addAction(UIAlertAction(title:"OK", style: UIAlertActionStyle.Default, handler: nil))
         sendTextErrorAlert.addAction(UIAlertAction(title:"OK", style: UIAlertActionStyle.Default, handler: nil))
         
@@ -46,13 +58,13 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
         
         let recipientsView = UIView(frame: getLabelRect(recipientsLabel))
         self.view.addSubview(recipientsView)
-        recipientsView.backgroundColor = UIColor.grayColor()
+        recipientsView.backgroundColor = appDelegate.darkValleybrookBlue
         let subjectView = UIView(frame: getLabelRect(subjectLabel))
         self.view.addSubview(subjectView)
-        subjectView.backgroundColor = UIColor.grayColor()
+        subjectView.backgroundColor = appDelegate.darkValleybrookBlue
         let messageView = UIView(frame: getLabelRect(messageLabel))
         self.view.addSubview(messageView)
-        messageView.backgroundColor = UIColor.grayColor()
+        messageView.backgroundColor = appDelegate.darkValleybrookBlue
         print(recipientsView.frame.origin.y, subjectView.frame.origin.y, messageView.frame.origin.y)
 
         recipientsLabel.layer.zPosition = 1
@@ -94,8 +106,6 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
         return groups.count
     }
     
-    
-    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! CustomCell
@@ -108,11 +118,6 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 45.0
-    }
-    
-    @IBAction func logoutButtonPressed(sender: AnyObject) {
-        let loginVC = storyboard?.instantiateViewControllerWithIdentifier("LoginViewController") as! LoginViewController
-        self.presentViewController(loginVC, animated: false, completion: nil)
     }
     
     @IBAction func sendEmailButtonTapped(sender: AnyObject) {
@@ -143,7 +148,6 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
         return textMessageVC
         
     }
-    
     
     func configuredMailComposeViewController() -> MFMailComposeViewController {
         let mailComposerVC = MFMailComposeViewController()
