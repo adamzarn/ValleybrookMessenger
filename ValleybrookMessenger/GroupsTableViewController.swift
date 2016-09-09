@@ -17,7 +17,7 @@ class GroupsTableViewController: UIViewController {
     
     @IBOutlet weak var myTableView: UITableView!
     
-    var groups: [String] = []
+    var groups: [String:Int] = [:]
     
     func tableView(tableView: UITableView, numberO section: Int) -> Int {
         return groups.count
@@ -25,13 +25,18 @@ class GroupsTableViewController: UIViewController {
     
     func updateGroups() {
         self.ref.observeSingleEventOfType(.Value, withBlock: { snapshot in
-            self.groups = []
+            self.groups = [:]
             if let groupsChild = snapshot.value!["Groups"] {
                 if groupsChild != nil {
-                    let groups = groupsChild as! NSDictionary
-                    for item in groups {
-                        let key = item.key
-                        self.groups.append(key as! String)
+                    let allGroups = groupsChild as! NSDictionary
+                    for item in allGroups {
+                        let key = item.key as! String
+                        if item.value is String {
+                            self.groups[key] = 0
+                        } else {
+                            let emails = item.value["Emails"]
+                            self.groups[key] = emails!!.count
+                        }
                     }
                 }
             }
@@ -53,7 +58,6 @@ class GroupsTableViewController: UIViewController {
             let newGroupRef = groupsRef.child(self.alert.textFields![0].text!)
             
             newGroupRef.setValue("")
-            newGroupRef.setValue("")
             
             self.alert.textFields![0].text = ""
             
@@ -71,9 +75,34 @@ class GroupsTableViewController: UIViewController {
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell")! as UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath) as UITableViewCell
         
-        cell.textLabel!.text = groups[indexPath.row]
+        cell.textLabel!.textColor = UIColor.blackColor()
+        cell.detailTextLabel!.textColor = UIColor.blackColor()
+        
+        var groupKeys: [String] = []
+        var groupCounts: [Int] = []
+        
+        for (key,value) in groups {
+            groupKeys.append(key)
+            groupCounts.append(value)
+        }
+        
+        print(groupKeys)
+        print(groupCounts)
+        
+        cell.textLabel!.text = groupKeys[indexPath.row]
+        cell.imageView!.image = UIImage(named: "Group.png")
+        if groupCounts[indexPath.row] == 1 {
+            cell.detailTextLabel?.text = "1 Member"
+        } else {
+            cell.detailTextLabel?.text = "\(groupCounts[indexPath.row]) Members"
+        }
+        
+        if groupCounts[indexPath.row] == 0 {
+            cell.textLabel!.textColor = UIColor.lightGrayColor()
+            cell.detailTextLabel!.textColor = UIColor.lightGrayColor()
+        }
         
         return cell
         
@@ -90,19 +119,18 @@ class GroupsTableViewController: UIViewController {
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
 
-            let object = groups[indexPath.row]
+            //let object = groups[indexPath.row]
             
-            self.ref.observeSingleEventOfType(.Value, withBlock: { snapshot in
-                let groupsChild = snapshot.value!["Groups"] as! NSDictionary
-                if let keys = groupsChild.allKeysForObject(object) as? [String] {
-                    if keys.count > 0 {
-                        let key = keys[0]
-                        let groupRef = self.ref.child("Groups").child(key)
-                        groupRef.removeValue()
-                    }
-                }
-            })
-
+            //self.ref.observeSingleEventOfType(.Value, withBlock: { snapshot in
+                //let groupsChild = snapshot.value!["Groups"] as! NSDictionary
+                //if let keys = groupsChild.allKeysForObject(object) as? [String] {
+                    //if keys.count > 0 {
+                        //let key = keys[0]
+                        //let groupRef = self.ref.child("Groups").child(key)
+                        //groupRef.removeValue()
+                    //}
+                //}
+            //})
         }
     }
 

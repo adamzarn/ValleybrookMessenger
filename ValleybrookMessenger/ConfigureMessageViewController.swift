@@ -13,6 +13,8 @@ import Firebase
 class ConfigureMessageViewController: UIViewController, MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate, UITextFieldDelegate, UITextViewDelegate {
     
     let ref = FIRDatabase.database().reference()
+    var emailRecipients: [String] = []
+    var textRecipients: [String] = []
     
     @IBOutlet weak var myTableView: UITableView!
     
@@ -32,8 +34,15 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
     func updateGroups() {
         self.ref.observeSingleEventOfType(.Value, withBlock: { snapshot in
             self.groups = []
-            let groupsChild = snapshot.value!["Groups"] as! NSDictionary
-            self.groups = groupsChild.allValues as! [String]
+            if let groupsChild = snapshot.value!["Groups"] {
+                if groupsChild != nil {
+                    let groups = groupsChild as! NSDictionary
+                    for item in groups {
+                        let key = item.key
+                        self.groups.append(key as! String)
+                    }
+                }
+            }
             
             self.myTableView.reloadData()
         })
@@ -108,7 +117,7 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! CustomCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! CustomRecipientsCell
         
         cell.setCell(groups[indexPath.row], subscribed: false)
         
@@ -139,10 +148,13 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
     }
     
     func configuredMessageComposeViewController() -> MFMessageComposeViewController {
+        
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
         let textMessageVC = MFMessageComposeViewController()
         textMessageVC.messageComposeDelegate = self
         
-        textMessageVC.recipients = ["6306778298"]
+        textMessageVC.recipients = appDelegate.textRecipients
         textMessageVC.body = messageTextView.text!
         
         return textMessageVC
@@ -150,10 +162,13 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
     }
     
     func configuredMailComposeViewController() -> MFMailComposeViewController {
+        
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
         let mailComposerVC = MFMailComposeViewController()
         mailComposerVC.mailComposeDelegate = self // Extremely important to set the --mailComposeDelegate-- property, NOT the --delegate-- property
         
-        mailComposerVC.setToRecipients(["adam.zarn@my.wheaton.edu"])
+        mailComposerVC.setToRecipients(appDelegate.emailRecipients)
         mailComposerVC.setSubject(subjectTextField.text!)
         mailComposerVC.setMessageBody(messageTextView.text!, isHTML: false)
         

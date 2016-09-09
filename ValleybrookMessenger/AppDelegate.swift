@@ -19,6 +19,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var email: String?
     var phone: String?
     
+    var emailRecipients: [String] = []
+    var textRecipients: [String] = []
+    
     let lightValleybrookBlue = UIColor(red: 125.0 / 255.0, green: 225.0 / 255.0, blue: 222.0 / 255.0, alpha: 1.0)
     let darkValleybrookBlue = UIColor(red: 48.0 / 255.0, green: 76.0 / 255.0, blue: 138.0 / 255.0, alpha: 1.0)
     
