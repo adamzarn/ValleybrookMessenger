@@ -11,47 +11,77 @@ import Firebase
 
 class SubscriptionsTableViewController: UIViewController {
 
-    @IBOutlet weak var subscriptionsTableView: UITableView!
-    @IBOutlet weak var navBar: UINavigationItem!
+    @IBOutlet weak var editProfileButton: UIBarButtonItem!
+    @IBOutlet weak var logoutButton: UIBarButtonItem!
     @IBOutlet weak var barButton: UIBarButtonItem!
     @IBOutlet weak var myTableView: UITableView!
-    
+    @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     let ref = FIRDatabase.database().reference()
     
-    var groups: [String] = []
+    var groups: [String:Bool] = [:]
+    var groupKeys: [String] = []
+    var subscribedToGroup: [Bool] = []
     
     func updateGroups() {
+        
         self.ref.observeSingleEventOfType(.Value, withBlock: { snapshot in
-            self.groups = []
+            self.groups = [:]
             if let groupsChild = snapshot.value!["Groups"] {
                 if groupsChild != nil {
-                    let groups = groupsChild as! NSDictionary
-                    for item in groups {
-                        let key = item.key
-                        self.groups.append(key as! String)
+                    let allGroups = groupsChild as! NSDictionary
+                    for item in allGroups {
+                        let key = item.key as! String
+                        if item.value is String {
+                            self.groups[key] = false
+                        } else {
+                            let emails = item.value["Emails"]!!.allValues as! [String]
+                            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+                            if emails.contains(appDelegate.email!) {
+                                self.groups[key] = true
+                            } else {
+                                self.groups[key] = false
+                            }
+                        }
                     }
                 }
             }
             
+            self.activityIndicatorView.stopAnimating()
+            self.activityIndicatorView.hidden = true
+            self.myTableView.hidden = false
             self.myTableView.reloadData()
         })
     }
     
-    var userEmail: String?
-    
-    func tableView(tableView: UITableView, numberO section: Int) -> Int {
-        return groups.count
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        myTableView.hidden = true
+        activityIndicatorView.hidden = false
+        activityIndicatorView.startAnimating()
+
+        myTableView.allowsSelection = false
+        
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         barButton.title = "Logged in as \(appDelegate.email!)"
         barButton.enabled = false
         barButton.tintColor = appDelegate.darkValleybrookBlue
+
+        if appDelegate.admin {
+            barButton.title = "Manage Groups as Administrator"
+            barButton.enabled = true
+        }
         
+        logoutButton.tintColor = appDelegate.darkValleybrookBlue
+        editProfileButton.tintColor = appDelegate.darkValleybrookBlue
+
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        myTableView.hidden = true
+        activityIndicatorView.hidden = false
+        activityIndicatorView.startAnimating()
         updateGroups()
-        
     }
     
     @IBAction func editProfileButtonPressed(sender: AnyObject) {
@@ -63,8 +93,16 @@ class SubscriptionsTableViewController: UIViewController {
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! CustomCell
-    
-        cell.setCell(groups[indexPath.row], subscribed: cell.switchFlippedOn)
+        
+        groupKeys = []
+        subscribedToGroup = []
+        
+        for (key,value) in groups {
+            groupKeys.append(key)
+            subscribedToGroup.append(value)
+        }
+
+        cell.setCell(groupKeys[indexPath.row], subscribed: subscribedToGroup[indexPath.row])
         
         return cell
         
@@ -91,10 +129,12 @@ class SubscriptionsTableViewController: UIViewController {
 
     }
     
-    
-    @IBAction func editButtonProfileButtonPressed(sender: AnyObject) {
-        let createProfileVC = storyboard?.instantiateViewControllerWithIdentifier("CreateProfileViewController") as! CreateProfileViewController
-        self.presentViewController(createProfileVC, animated: false, completion: nil)
+    @IBAction func manageGroupsButtonPressed(sender: AnyObject) {
+        let groupsVC = storyboard?.instantiateViewControllerWithIdentifier("GroupsTableViewController") as! GroupsTableViewController
+        self.navigationController?.pushViewController(groupsVC, animated: false)
+        
     }
+    
+    
     
 }

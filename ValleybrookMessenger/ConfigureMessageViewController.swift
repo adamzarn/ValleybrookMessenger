@@ -13,10 +13,15 @@ import Firebase
 class ConfigureMessageViewController: UIViewController, MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate, UITextFieldDelegate, UITextViewDelegate {
     
     let ref = FIRDatabase.database().reference()
+    
     var emailRecipients: [String] = []
     var textRecipients: [String] = []
     
+    @IBOutlet weak var sendEmailButton: UIBarButtonItem!
+    @IBOutlet weak var sendTextButton: UIBarButtonItem!
+    
     @IBOutlet weak var myTableView: UITableView!
+    @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     
     @IBOutlet weak var subjectTextField: MyTextField!
     @IBOutlet weak var groupsTableView: UITableView!
@@ -29,21 +34,31 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
     let sendMailErrorAlert = UIAlertController(title: "Cannot Send Email", message: "Your device cannot send e-mail. Please check e-mail configuration and try again.", preferredStyle: UIAlertControllerStyle.Alert)
     let sendTextErrorAlert = UIAlertController(title: "Cannot Send Text", message: "Your device cannot send texts. Please check text configuration and try again.", preferredStyle: UIAlertControllerStyle.Alert)
     
-    var groups: [String] = []
-    
+    var groups: [String:Int] = [:]
+    var groupKeys: [String] = []
+    var groupCounts: [Int] = []
+
     func updateGroups() {
         self.ref.observeSingleEventOfType(.Value, withBlock: { snapshot in
-            self.groups = []
+            self.groups = [:]
             if let groupsChild = snapshot.value!["Groups"] {
                 if groupsChild != nil {
-                    let groups = groupsChild as! NSDictionary
-                    for item in groups {
-                        let key = item.key
-                        self.groups.append(key as! String)
+                    let allGroups = groupsChild as! NSDictionary
+                    for item in allGroups {
+                        let key = item.key as! String
+                        if item.value is String {
+                            self.groups[key] = 0
+                        } else {
+                            let emails = item.value["Emails"]
+                            self.groups[key] = emails!!.count
+                        }
                     }
                 }
             }
             
+            self.activityIndicatorView.stopAnimating()
+            self.activityIndicatorView.hidden = true
+            self.myTableView.hidden = false
             self.myTableView.reloadData()
         })
     }
@@ -51,7 +66,11 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        updateGroups()
+        myTableView.hidden = true
+        activityIndicatorView.hidden = false
+        activityIndicatorView.startAnimating()
+        
+        myTableView.allowsSelection = false
         
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
@@ -88,23 +107,28 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
         
         messageTextView.textContainerInset = UIEdgeInsetsMake(5.0, 5.0, 0.0, 5.0)
         
+        sendEmailButton.tintColor = appDelegate.darkValleybrookBlue
+        sendTextButton.tintColor = appDelegate.darkValleybrookBlue
+        
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        myTableView.hidden = true
+        activityIndicatorView.hidden = false
+        activityIndicatorView.startAnimating()
+        updateGroups()
         subscribeToKeyboardNotifications()
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
+        
         unsubscribeFromKeyboardNotifications()
     }
     
     func getLabelRect(label: UILabel) -> CGRect {
-        let statusBarHeight = UIApplication.sharedApplication().statusBarFrame.size.height
-        let navBarHeight = self.navigationController?.navigationBar.frame.size.height
-        let yShift = statusBarHeight + navBarHeight!
-        return CGRectMake(label.frame.origin.x,label.frame.origin.y + yShift + 9.0, label.frame.width,label.frame.height)
+        return CGRectMake(label.frame.origin.x,label.frame.origin.y + 9.0, label.frame.width,label.frame.height)
     }
     
     func didTapView() {
@@ -119,7 +143,31 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
         
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! CustomRecipientsCell
         
-        cell.setCell(groups[indexPath.row], subscribed: false)
+        cell.group.textColor = UIColor.blackColor()
+        cell.members.textColor = UIColor.blackColor()
+        cell.subscribed.enabled = true
+        
+        groupKeys = []
+        groupCounts = []
+        
+        for (key,value) in groups {
+            groupKeys.append(key)
+            groupCounts.append(value)
+        }
+
+        cell.setCell(groupKeys[indexPath.row], subscribed: false)
+        
+        if groupCounts[indexPath.row] == 1 {
+            cell.members.text = "1 member"
+        } else {
+            cell.members.text = "\(groupCounts[indexPath.row]) members"
+        }
+        
+        if groupCounts[indexPath.row] == 0 {
+            cell.subscribed.enabled = false
+            cell.group.textColor = UIColor.lightGrayColor()
+            cell.members.textColor = UIColor.lightGrayColor()
+        }
         
         return cell
         
@@ -200,6 +248,13 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
         return true
     }
     
+    func textFieldDidEndEditing(textField: UITextField) {
+        if textField.text == "" {
+            textField.text = "Subject"
+            textField.textColor = UIColor.lightGrayColor()
+        }
+    }
+    
     func textViewDidBeginEditing(textView: UITextView) {
         textView.becomeFirstResponder()
         if textView.text == "Type message here..." {
@@ -227,17 +282,23 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
     }
     
     func keyboardWillShow(notification: NSNotification) {
-        view.frame.origin.y = -1*getKeyboardHeight(notification)
+        view.frame.origin.y = -1*(getKeyboardHeight(notification))
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        view.frame.origin.y = 0
+        
+        let navBarHeight = self.navigationController!.navigationBar.frame.height + UIApplication.sharedApplication().statusBarFrame.size.height
+        
+        view.frame.origin.y = navBarHeight
     }
     
     func getKeyboardHeight(notification: NSNotification) -> CGFloat {
+        
+        let navBarHeight = self.navigationController!.navigationBar.frame.height + UIApplication.sharedApplication().statusBarFrame.size.height
+        
         let userInfo = notification.userInfo!
         let keyboardSize = userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue
-        return keyboardSize.CGRectValue().height
+        return keyboardSize.CGRectValue().height - navBarHeight
     }
 
     @IBAction func resetButtonPressed(sender: AnyObject) {
@@ -247,6 +308,5 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
         messageTextView.textColor = UIColor.lightGrayColor()
         myTableView.reloadData()
     }
-
     
 }

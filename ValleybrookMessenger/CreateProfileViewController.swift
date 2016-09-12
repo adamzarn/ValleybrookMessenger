@@ -19,6 +19,7 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var verifyPasswordTextField: UITextField!
     @IBOutlet weak var submitButton: UIButton!
     @IBOutlet weak var navItem: UINavigationItem!
+    @IBOutlet weak var cancelButton: UIBarButtonItem!
     
     let createProfileErrorAlert = UIAlertController(title: "Error", message: "Error", preferredStyle: UIAlertControllerStyle.Alert)
     
@@ -28,10 +29,25 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
 
     override func viewDidLoad() {
         
+        let toolbarDone = UIToolbar.init()
+        toolbarDone.sizeToFit()
+        let flex = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: self, action: nil)
+        let barBtnDone = UIBarButtonItem.init(barButtonSystemItem: UIBarButtonSystemItem.Done
+                                            ,target: self
+            , action: #selector(doneButtonPressed))
+        
+        toolbarDone.items = [flex,barBtnDone] // You can even add cancel button too
+        nameTextField.inputAccessoryView = toolbarDone
+        emailTextField.inputAccessoryView = toolbarDone
+        phoneTextField.inputAccessoryView = toolbarDone
+        passwordTextField.inputAccessoryView = toolbarDone
+        verifyPasswordTextField.inputAccessoryView = toolbarDone
+        
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
         createProfileErrorAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
         
+        nameTextField.delegate = self
         emailTextField.delegate = self
         phoneTextField.delegate = self
         passwordTextField.delegate = self
@@ -48,6 +64,12 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
         verifyPasswordTextField.enabled = false
         
         activityIndicatorView.hidden = true
+        
+        cancelButton.tintColor = appDelegate.darkValleybrookBlue
+    }
+    
+    func doneButtonPressed() {
+        self.view.endEditing(true)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -55,9 +77,10 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
         if comingFromLogin {
-            
+            emailTextField.enabled = true
         } else {
             navItem.title = "Edit Profile"
+            emailTextField.enabled = false
             passwordTextField.hidden = true
             verifyPasswordTextField!.hidden = true
             passwordTextField!.enabled = false
@@ -70,11 +93,11 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
                 let user = snapshot.value!
                 self.nameTextField.text = user["name"] as? String
                 self.emailTextField.text = user["email"] as? String
-                self.phoneTextField.text = user["phone"] as? String
+                let phone = user["phone"] as! String
+                self.phoneTextField.text = FirebaseClient.sharedInstance.formatPhoneNumber(phone)
             })
         }
     }
-
     
     func setUp(object: AnyObject?) {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -87,16 +110,37 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
+    func endWithError(message: String) {
+        self.createProfileErrorAlert.message = message
+        self.presentViewController(self.createProfileErrorAlert, animated: true, completion: nil)
+        self.activityIndicatorView.hidden = true
+        self.activityIndicatorView.stopAnimating()
+    }
+    
     @IBAction func submitButtonPressed(sender: AnyObject) {
         
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let unformattedPhone = FirebaseClient.sharedInstance.undoPhoneNumberFormat(phoneTextField.text!)
         
         activityIndicatorView.startAnimating()
         activityIndicatorView.hidden = false
         
         if comingFromLogin {
         
-            if passwordTextField.text == verifyPasswordTextField.text {
+            if passwordTextField.text != verifyPasswordTextField.text {
+                
+                self.endWithError("The second password does not match the first.")
+                
+            } else if unformattedPhone.characters.count != 10 {
+                
+                self.endWithError("Your phone number must be exactly 10 digits long.")
+
+            } else if nameTextField.text! == "" {
+                
+                self.endWithError("You must provide a name.")
+                
+            } else {
+                
                 let email = emailTextField.text
                 let password = passwordTextField.text
                 FIRAuth.auth()?.createUserWithEmail(email!, password: password!) { (user, error) in
@@ -104,28 +148,38 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
                         print(error.localizedDescription)
                         self.createProfileErrorAlert.message = error.localizedDescription
                         self.presentViewController(self.createProfileErrorAlert, animated: true, completion: nil)
+                            self.activityIndicatorView.hidden = true
+                            self.activityIndicatorView.stopAnimating()
                         return
                     }
                     self.setDisplayName(user!)
-                }
-            } else {
-                self.createProfileErrorAlert.message = "The second password does not match the first."
-                self.presentViewController(self.createProfileErrorAlert, animated: true, completion: nil)
             }
-            
+        }
+        
         } else {
+
+            if unformattedPhone.characters.count == 10 && nameTextField.text! != "" {
             
-            let userRef = self.ref.child("Users").child(appDelegate.uid!)
-            
-            userRef.updateChildValues(["name":nameTextField.text!,
-                                        "email":emailTextField.text!,
-                                        "phone":phoneTextField.text!])
-            
-            let subscriptionsVC = storyboard?.instantiateViewControllerWithIdentifier("SubscriptionsTableViewController") as! SubscriptionsTableViewController
-            self.presentViewController(subscriptionsVC, animated: false, completion: nil)
-            
-            activityIndicatorView.hidden = true
-            activityIndicatorView.stopAnimating()
+                let userRef = self.ref.child("Users").child(appDelegate.uid!)
+                
+                userRef.updateChildValues(["name":nameTextField.text!,
+                                            "email":emailTextField.text!,
+                                            "phone":unformattedPhone])
+                
+                appDelegate.name = nameTextField.text!
+                appDelegate.phone = unformattedPhone
+                appDelegate.email = emailTextField.text!
+                
+                let subscriptionsVC = storyboard?.instantiateViewControllerWithIdentifier("SubscriptionsTableViewController") as! SubscriptionsTableViewController
+                self.presentViewController(subscriptionsVC, animated: false, completion: nil)
+                
+            } else {
+                if unformattedPhone.characters.count != 10 {
+                    self.endWithError("Your phone number must be exactly 10 digits long.")
+                } else {
+                    self.endWithError("You must provide a name.")
+                }
+            }
             
         }
         
@@ -144,8 +198,16 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
     }
     
     func signedIn(user: FIRUser?) {
-        let newUser = User(uid: user!.uid, name: nameTextField.text!, email: user!.email!, phone: phoneTextField.text!, admin: false)
-        let userRef = self.ref.childByAppendingPath("Users/\(user!.uid)")
+        let newUser = User(uid: user!.uid, name: nameTextField.text!, email: user!.email!, phone: FirebaseClient.sharedInstance.undoPhoneNumberFormat(phoneTextField.text!), admin: false)
+        
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        appDelegate.uid = user!.uid
+        appDelegate.email = user!.email
+        appDelegate.phone = FirebaseClient.sharedInstance.undoPhoneNumberFormat(phoneTextField.text!)
+        appDelegate.name = nameTextField.text!
+        
+        let userRef = self.ref.child("Users/\(user!.uid)")
         userRef.setValue(newUser.toAnyObject())
         
         MeasurementHelper.sendLoginEvent()
@@ -155,7 +217,6 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
         AppState.sharedInstance.signedIn = true
         NSNotificationCenter.defaultCenter().postNotificationName(Constants.NotificationKeys.SignedIn, object: nil, userInfo: nil)
         let subscriptionsVC = storyboard?.instantiateViewControllerWithIdentifier("SubscriptionsTableViewController") as! SubscriptionsTableViewController
-        subscriptionsVC.userEmail = user!.email!
         self.presentViewController(subscriptionsVC, animated: false, completion: nil)
         
         activityIndicatorView.hidden = true
@@ -200,6 +261,45 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
             verifyPasswordTextField.enabled = false
         }
     }
-
+    
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        if (textField == phoneTextField) {
+            let newString = (textField.text! as NSString).stringByReplacingCharactersInRange(range, withString: string)
+            let components = newString.componentsSeparatedByCharactersInSet(NSCharacterSet.decimalDigitCharacterSet().invertedSet)
+            
+            let decimalString = components.joinWithSeparator("") as NSString
+            let length = decimalString.length
+            let hasLeadingOne = length > 0 && decimalString.characterAtIndex(0) == (1 as unichar)
+            
+            if length == 0 || (length > 10 && !hasLeadingOne) || length > 11 {
+                let newLength = (textField.text! as NSString).length + (string as NSString).length - range.length as Int
+                
+                return (newLength > 10) ? false : true
+            }
+            var index = 0 as Int
+            let formattedString = NSMutableString()
+            
+            if hasLeadingOne {
+                formattedString.appendString("1 ")
+                index += 1
+            }
+            if (length - index) > 3 {
+                let areaCode = decimalString.substringWithRange(NSMakeRange(index, 3))
+                formattedString.appendFormat("(%@) ", areaCode)
+                index += 3
+            }
+            if length - index > 3 {
+                let prefix = decimalString.substringWithRange(NSMakeRange(index, 3))
+                formattedString.appendFormat("%@-", prefix)
+                index += 3
+            }
+            let remainder = decimalString.substringFromIndex(index)
+            formattedString.appendString(remainder)
+            textField.text = formattedString as String
+            return false
+        } else {
+            return true
+        }
+    }
 
 }

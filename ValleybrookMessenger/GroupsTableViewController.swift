@@ -13,15 +13,16 @@ class GroupsTableViewController: UIViewController {
     
     var alert = UIAlertController(title: "Add New Group", message: "", preferredStyle: UIAlertControllerStyle.Alert)
     
+    @IBOutlet weak var createMessageButton: UIBarButtonItem!
+    @IBOutlet weak var addGroupButton: UIBarButtonItem!
+    @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     let ref = FIRDatabase.database().reference()
     
     @IBOutlet weak var myTableView: UITableView!
     
     var groups: [String:Int] = [:]
-    
-    func tableView(tableView: UITableView, numberO section: Int) -> Int {
-        return groups.count
-    }
+    var groupKeys: [String] = []
+    var groupCounts: [Int] = []
     
     func updateGroups() {
         self.ref.observeSingleEventOfType(.Value, withBlock: { snapshot in
@@ -40,7 +41,10 @@ class GroupsTableViewController: UIViewController {
                     }
                 }
             }
-
+            
+            self.activityIndicatorView.stopAnimating()
+            self.activityIndicatorView.hidden = true
+            self.myTableView.hidden = false
             self.myTableView.reloadData()
         })
     }
@@ -48,11 +52,15 @@ class GroupsTableViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        updateGroups()
+        self.navigationController!.navigationBar.translucent = false
+        
+        myTableView.hidden = true
+        activityIndicatorView.hidden = false
+        activityIndicatorView.startAnimating()
 
         alert.addTextFieldWithConfigurationHandler(configurationTextField)
         
-        self.alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (UIAlertAction)in
+        self.alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (UIAlertAction) in
             
             let groupsRef = self.ref.child("Groups")
             let newGroupRef = groupsRef.child(self.alert.textFields![0].text!)
@@ -65,6 +73,21 @@ class GroupsTableViewController: UIViewController {
             
         }))
         
+        self.alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default, handler: nil))
+        
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        addGroupButton.tintColor = appDelegate.darkValleybrookBlue
+        self.navigationController?.navigationBar.tintColor = appDelegate.darkValleybrookBlue
+        createMessageButton.tintColor = appDelegate.darkValleybrookBlue
+        
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        myTableView.hidden = true
+        activityIndicatorView.hidden = false
+        activityIndicatorView.startAnimating()
+        updateGroups()
     }
     
     func configurationTextField(textField: UITextField!) {
@@ -80,16 +103,13 @@ class GroupsTableViewController: UIViewController {
         cell.textLabel!.textColor = UIColor.blackColor()
         cell.detailTextLabel!.textColor = UIColor.blackColor()
         
-        var groupKeys: [String] = []
-        var groupCounts: [Int] = []
+        groupKeys = []
+        groupCounts = []
         
         for (key,value) in groups {
             groupKeys.append(key)
             groupCounts.append(value)
         }
-        
-        print(groupKeys)
-        print(groupCounts)
         
         cell.textLabel!.text = groupKeys[indexPath.row]
         cell.imageView!.image = UIImage(named: "Group.png")
@@ -119,19 +139,25 @@ class GroupsTableViewController: UIViewController {
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
 
-            //let object = groups[indexPath.row]
+            let groupToRemove = groupKeys[indexPath.row]
             
-            //self.ref.observeSingleEventOfType(.Value, withBlock: { snapshot in
-                //let groupsChild = snapshot.value!["Groups"] as! NSDictionary
-                //if let keys = groupsChild.allKeysForObject(object) as? [String] {
-                    //if keys.count > 0 {
-                        //let key = keys[0]
-                        //let groupRef = self.ref.child("Groups").child(key)
-                        //groupRef.removeValue()
-                    //}
-                //}
-            //})
+            groups.removeValueForKey(groupToRemove)
+            let groupRef = self.ref.child("Groups").child(groupToRemove)
+            groupRef.removeValue()
+            
+            myTableView.reloadData()
         }
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if groupCounts[indexPath.row] > 0 {
+        let membersVC = storyboard?.instantiateViewControllerWithIdentifier("MembersTableViewController") as! MembersTableViewController
+        membersVC.group = groupKeys[indexPath.row]
+        self.navigationController?.pushViewController(membersVC, animated: true)
+        }
+        
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        
     }
 
     @IBAction func createMessageButtonPressed(sender: AnyObject) {

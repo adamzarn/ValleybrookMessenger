@@ -36,40 +36,58 @@ class CustomCell: UITableViewCell {
             newEmailRef.setValue(appDelegate.email)
             let newPhoneRef = self.ref.child("Groups").child(object).child("Phones").childByAutoId()
             newPhoneRef.setValue(appDelegate.phone)
+            let newNameRef = self.ref.child("Groups").child(object).child("Names").childByAutoId()
+            newNameRef.setValue(appDelegate.name)
 
         } else {
             
             self.switchFlippedOn = false
+            var addGroupBack = false
             
             self.ref.observeSingleEventOfType(.Value, withBlock: { snapshot in
                 if snapshot.value!["Groups"]!![object] != nil {
-                let groups = snapshot.value!["Groups"]!![object] as! NSDictionary
-                let emails = groups["Emails"] as! NSDictionary
-                let phones = groups["Phones"] as! NSDictionary
+                    let groups = snapshot.value!["Groups"]!![object] as! NSDictionary
+                    let emails = groups["Emails"] as! NSDictionary
+                    let phones = groups["Phones"] as! NSDictionary
+                    let names = groups["Names"] as! NSDictionary
+                    
+                    if emails.count == 1 {
+                        addGroupBack = true
+                    }
                 
-                let emailKeys = emails.allKeysForObject(appDelegate.email!) as! [String]
-                let phoneKeys = phones.allKeysForObject(appDelegate.phone!) as! [String]
+                    let emailKeys = emails.allKeysForObject(appDelegate.email!) as! [String]
+                    let phoneKeys = phones.allKeysForObject(appDelegate.phone!) as! [String]
+                    let nameKeys = names.allKeysForObject(appDelegate.name!) as! [String]
                 
-                if emailKeys.count > 0 {
-                    let emailKey = emailKeys[0]
-                    let emailToDeleteRef = groupsRef.child(object).child("Emails").child(emailKey)
-                    emailToDeleteRef.removeValue()
+                    if emailKeys.count > 0 {
+                        let emailKey = emailKeys[0]
+                        let emailToDeleteRef = groupsRef.child(object).child("Emails").child(emailKey)
+                        emailToDeleteRef.removeValue()
+                    }
+                
+                    if phoneKeys.count > 0 {
+                        let phoneKey = phoneKeys[0]
+                        let phoneToDeleteRef = groupsRef.child(object).child("Phones").child(phoneKey)
+                        phoneToDeleteRef.removeValue()
+                    }
+                    
+                    if nameKeys.count > 0 {
+                        let nameKey = nameKeys[0]
+                        let nameToDeleteRef = groupsRef.child(object).child("Names").child(nameKey)
+                        nameToDeleteRef.removeValue()
+                    }
+                    
+                    if addGroupBack {
+                        let groupsRef = self.ref.child("Groups")
+                        let newGroupRef = groupsRef.child(object)
+                    
+                        newGroupRef.setValue("")
+                    }
+
+                
                 }
-                
-                if phoneKeys.count > 0 {
-                    let phoneKey = phoneKeys[0]
-                    let phoneToDeleteRef = groupsRef.child(object).child("Phones").child(phoneKey)
-                    phoneToDeleteRef.removeValue()
-                }
-                
-                }
-                
-                }, withCancelBlock: { error in
-                    print(error.description)
             })
         }
     }
-
-    
     
 }

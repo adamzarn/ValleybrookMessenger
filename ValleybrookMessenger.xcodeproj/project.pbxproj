@@ -10,6 +10,9 @@
 		AC6E125ACD2EC0F201BD7444 /* Pods_ValleybrookMessenger.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB0619B6D311BFCB02E5580D /* Pods_ValleybrookMessenger.framework */; };
 		B892A88457621C565113FE3C /* Pods_ValleybrookMessengerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 32E9965037BC0E3B2394014C /* Pods_ValleybrookMessengerTests.framework */; };
 		C48E6A43B6E1A00B53C43CBA /* Pods_ValleybrookMessengerUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DF9B86DA24FBEB72ACA5A27 /* Pods_ValleybrookMessengerUITests.framework */; };
+		DB21941D1D832FFD00E5536D /* FirebaseClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB21941C1D832FFD00E5536D /* FirebaseClient.swift */; };
+		DB21941F1D83374300E5536D /* MembersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB21941E1D83374300E5536D /* MembersTableViewController.swift */; };
+		DB2194211D83393B00E5536D /* CustomMemberCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2194201D83393B00E5536D /* CustomMemberCell.swift */; };
 		DB4D5F751D809E690028E182 /* MyTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4D5F741D809E690028E182 /* MyTextField.swift */; };
 		DB4D5F791D80BB5B0028E182 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DB4D5F781D80BB5B0028E182 /* GoogleService-Info.plist */; };
 		DB7D3CDC1D80FE7700C3A3A4 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7D3CDB1D80FE7700C3A3A4 /* AppState.swift */; };
@@ -58,6 +61,9 @@
 		9DF9B86DA24FBEB72ACA5A27 /* Pods_ValleybrookMessengerUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ValleybrookMessengerUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C31F818CB7A6B548D6BB703D /* Pods-ValleybrookMessengerUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ValleybrookMessengerUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ValleybrookMessengerUITests/Pods-ValleybrookMessengerUITests.release.xcconfig"; sourceTree = "<group>"; };
 		DB0619B6D311BFCB02E5580D /* Pods_ValleybrookMessenger.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ValleybrookMessenger.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DB21941C1D832FFD00E5536D /* FirebaseClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseClient.swift; sourceTree = "<group>"; };
+		DB21941E1D83374300E5536D /* MembersTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MembersTableViewController.swift; sourceTree = "<group>"; };
+		DB2194201D83393B00E5536D /* CustomMemberCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomMemberCell.swift; sourceTree = "<group>"; };
 		DB4D5F741D809E690028E182 /* MyTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyTextField.swift; sourceTree = "<group>"; };
 		DB4D5F781D80BB5B0028E182 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		DB7D3CDB1D80FE7700C3A3A4 /* AppState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
@@ -184,6 +190,9 @@
 				DB7D3CDF1D80FF5200C3A3A4 /* Constants.swift */,
 				DB7D3CE11D8110B300C3A3A4 /* User.swift */,
 				DB7D3CE31D8111C800C3A3A4 /* VM-Bridging-Header.h */,
+				DB21941C1D832FFD00E5536D /* FirebaseClient.swift */,
+				DB21941E1D83374300E5536D /* MembersTableViewController.swift */,
+				DB2194201D83393B00E5536D /* CustomMemberCell.swift */,
 			);
 			path = ValleybrookMessenger;
 			sourceTree = "<group>";
@@ -471,6 +480,7 @@
 			files = (
 				DBCE98001D7F385F00B93AED /* SubscriptionsTableViewController.swift in Sources */,
 				DB7D3CE01D80FF5200C3A3A4 /* Constants.swift in Sources */,
+				DB21941D1D832FFD00E5536D /* FirebaseClient.swift in Sources */,
 				DB7D3CE51D81BA4200C3A3A4 /* GroupsTableViewController.swift in Sources */,
 				DB4D5F751D809E690028E182 /* MyTextField.swift in Sources */,
 				DBCE97FA1D7F27F100B93AED /* LoginViewController.swift in Sources */,
@@ -478,6 +488,8 @@
 				DBCE97C91D7F10D300B93AED /* AppDelegate.swift in Sources */,
 				DBCE98021D7F4FFE00B93AED /* ConfigureMessageViewController.swift in Sources */,
 				DB7D3CE71D82E28700C3A3A4 /* CustomRecipientsCell.swift in Sources */,
+				DB21941F1D83374300E5536D /* MembersTableViewController.swift in Sources */,
+				DB2194211D83393B00E5536D /* CustomMemberCell.swift in Sources */,
 				DB7D3CDE1D80FEC700C3A3A4 /* MeasurementHelper.swift in Sources */,
 				DB7D3CE21D8110B300C3A3A4 /* User.swift in Sources */,
 				DBCE97FC1D7F29FD00B93AED /* CreateProfileViewController.swift in Sources */,

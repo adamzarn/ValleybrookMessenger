@@ -14,6 +14,7 @@ class CustomRecipientsCell: UITableViewCell {
     let ref = FIRDatabase.database().reference()
     
     @IBOutlet weak var group: UILabel!
+    @IBOutlet weak var members: UILabel!
     @IBOutlet weak var subscribed: UISwitch!
     var switchFlippedOn = false
     
