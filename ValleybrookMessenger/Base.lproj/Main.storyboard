@@ -396,6 +396,7 @@
                         <outlet property="sendTextButton" destination="XwP-0l-lcG" id="3Te-Ne-aB9"/>
                         <outlet property="subjectLabel" destination="8bH-fb-bvI" id="d1b-c4-f4v"/>
                         <outlet property="subjectTextField" destination="EJ8-Vi-J7f" id="B0b-lD-P2B"/>
+                        <outlet property="toolBar" destination="HiJ-T5-JQ2" id="DcT-N2-OWY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="O81-wo-DSo" userLabel="First Responder" sceneMemberID="firstResponder"/>

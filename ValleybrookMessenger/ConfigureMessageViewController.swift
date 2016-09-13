@@ -19,6 +19,7 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
     
     @IBOutlet weak var sendEmailButton: UIBarButtonItem!
     @IBOutlet weak var sendTextButton: UIBarButtonItem!
+    @IBOutlet weak var toolBar: UIToolbar!
     
     @IBOutlet weak var myTableView: UITableView!
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
@@ -70,6 +71,8 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
         activityIndicatorView.hidden = false
         activityIndicatorView.startAnimating()
         
+        toolBar.translucent = false
+        
         myTableView.allowsSelection = false
         
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -119,6 +122,7 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
         activityIndicatorView.startAnimating()
         updateGroups()
         subscribeToKeyboardNotifications()
+
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -187,11 +191,18 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
     }
     
     @IBAction func sendTextButtonTapped(sender: AnyObject) {
-        let textMessageViewController = configuredMessageComposeViewController()
-        if MFMessageComposeViewController.canSendText() {
-            self.presentViewController(textMessageViewController, animated: false, completion: nil)
+        
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        if appDelegate.textRecipients.count > 10 {
+            sendTextErrorAlert.message = "You cannot send texts to more than 10 people at once."
+            self.presentViewController(sendTextErrorAlert,animated:true,completion: nil)
         } else {
-            self.presentViewController(sendTextErrorAlert, animated: false, completion: nil)
+            let textMessageViewController = configuredMessageComposeViewController()
+            if MFMessageComposeViewController.canSendText() {
+                self.presentViewController(textMessageViewController, animated: false, completion: nil)
+            } else {
+                self.presentViewController(sendTextErrorAlert, animated: false, completion: nil)
+            }
         }
     }
     
