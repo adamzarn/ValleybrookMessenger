@@ -39,29 +39,32 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
     var groupKeys: [String] = []
     var groupCounts: [Int] = []
 
+    func getUserCount() {
+        FirebaseClient.sharedInstance.getUserData { (result, error) -> () in
+            if let result = result {
+                self.groups["All Users"] = result.count
+            }
+        }
+    }
+    
     func updateGroups() {
-        self.ref.observeSingleEventOfType(.Value, withBlock: { snapshot in
-            self.groups = [:]
-            if let groupsChild = snapshot.value!["Groups"] {
-                if groupsChild != nil {
-                    let allGroups = groupsChild as! NSDictionary
-                    for item in allGroups {
-                        let key = item.key as! String
-                        if item.value is String {
-                            self.groups[key] = 0
-                        } else {
-                            let emails = item.value["Emails"]
-                            self.groups[key] = emails!!.count
-                        }
+        FirebaseClient.sharedInstance.getGroupData { (result, error) -> () in
+            if let result = result {
+                for item in result {
+                    let key = item.key as! String
+                    if item.value is String {
+                        self.groups[key] = 0
+                    } else {
+                        let emails = item.value["Emails"]
+                        self.groups[key] = emails!!.count
                     }
                 }
             }
-            
             self.activityIndicatorView.stopAnimating()
             self.activityIndicatorView.hidden = true
             self.myTableView.hidden = false
             self.myTableView.reloadData()
-        })
+        }
     }
 
     override func viewDidLoad() {
@@ -120,6 +123,7 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
         myTableView.hidden = true
         activityIndicatorView.hidden = false
         activityIndicatorView.startAnimating()
+        getUserCount()
         updateGroups()
         subscribeToKeyboardNotifications()
 
@@ -154,9 +158,11 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
         groupKeys = []
         groupCounts = []
         
-        for (key,value) in groups {
+        let sortedGroupKeys = Array(groups.keys).sort(<)
+        
+        for key in sortedGroupKeys {
             groupKeys.append(key)
-            groupCounts.append(value)
+            groupCounts.append(groups[key]!)
         }
 
         cell.setCell(groupKeys[indexPath.row], subscribed: false)

@@ -171,28 +171,10 @@
 			isa = PBXGroup;
 			children = (
 				DBCE97C81D7F10D300B93AED /* AppDelegate.swift */,
-				DBCE97F91D7F27F100B93AED /* LoginViewController.swift */,
-				DBCE97FB1D7F29FD00B93AED /* CreateProfileViewController.swift */,
-				DBCE97FD1D7F375200B93AED /* CustomCell.swift */,
-				DB7D3CE61D82E28600C3A3A4 /* CustomRecipientsCell.swift */,
-				DBCE97FF1D7F385F00B93AED /* SubscriptionsTableViewController.swift */,
-				DBCE98011D7F4FFE00B93AED /* ConfigureMessageViewController.swift */,
-				DB7D3CE41D81BA4200C3A3A4 /* GroupsTableViewController.swift */,
-				DBCE97CC1D7F10D300B93AED /* Main.storyboard */,
-				DBCE97D21D7F10D300B93AED /* Assets.xcassets */,
-				DBCE97D41D7F10D300B93AED /* LaunchScreen.storyboard */,
-				DBCE97D71D7F10D300B93AED /* Info.plist */,
-				DBCE97CF1D7F10D300B93AED /* ValleybrookMessenger.xcdatamodeld */,
-				DB4D5F741D809E690028E182 /* MyTextField.swift */,
-				DB4D5F781D80BB5B0028E182 /* GoogleService-Info.plist */,
-				DB7D3CDB1D80FE7700C3A3A4 /* AppState.swift */,
-				DB7D3CDD1D80FEC700C3A3A4 /* MeasurementHelper.swift */,
-				DB7D3CDF1D80FF5200C3A3A4 /* Constants.swift */,
-				DB7D3CE11D8110B300C3A3A4 /* User.swift */,
-				DB7D3CE31D8111C800C3A3A4 /* VM-Bridging-Header.h */,
-				DB21941C1D832FFD00E5536D /* FirebaseClient.swift */,
-				DB21941E1D83374300E5536D /* MembersTableViewController.swift */,
-				DB2194201D83393B00E5536D /* CustomMemberCell.swift */,
+				DBFF39C81D89AA780046D403 /* Model */,
+				DBFF39C71D89AA6E0046D403 /* Controller */,
+				DBFF39CB1D89AB370046D403 /* Assets */,
+				DBFF39CA1D89AAC80046D403 /* Supporting Files */,
 			);
 			path = ValleybrookMessenger;
 			sourceTree = "<group>";
@@ -213,6 +195,64 @@
 				DBCE97ED1D7F10D300B93AED /* Info.plist */,
 			);
 			path = ValleybrookMessengerUITests;
+			sourceTree = "<group>";
+		};
+		DBFF39C71D89AA6E0046D403 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				DBCE97F91D7F27F100B93AED /* LoginViewController.swift */,
+				DBCE97FB1D7F29FD00B93AED /* CreateProfileViewController.swift */,
+				DBCE97FF1D7F385F00B93AED /* SubscriptionsTableViewController.swift */,
+				DB7D3CE41D81BA4200C3A3A4 /* GroupsTableViewController.swift */,
+				DB21941E1D83374300E5536D /* MembersTableViewController.swift */,
+				DBCE98011D7F4FFE00B93AED /* ConfigureMessageViewController.swift */,
+				DBFF39C91D89AA950046D403 /* Cells */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		DBFF39C81D89AA780046D403 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				DB21941C1D832FFD00E5536D /* FirebaseClient.swift */,
+				DB7D3CE11D8110B300C3A3A4 /* User.swift */,
+				DB7D3CDF1D80FF5200C3A3A4 /* Constants.swift */,
+				DB7D3CDD1D80FEC700C3A3A4 /* MeasurementHelper.swift */,
+				DB7D3CDB1D80FE7700C3A3A4 /* AppState.swift */,
+				DBCE97CF1D7F10D300B93AED /* ValleybrookMessenger.xcdatamodeld */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		DBFF39C91D89AA950046D403 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				DBCE97FD1D7F375200B93AED /* CustomCell.swift */,
+				DB2194201D83393B00E5536D /* CustomMemberCell.swift */,
+				DB7D3CE61D82E28600C3A3A4 /* CustomRecipientsCell.swift */,
+			);
+			name = Cells;
+			sourceTree = "<group>";
+		};
+		DBFF39CA1D89AAC80046D403 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				DBCE97D71D7F10D300B93AED /* Info.plist */,
+				DB7D3CE31D8111C800C3A3A4 /* VM-Bridging-Header.h */,
+				DB4D5F741D809E690028E182 /* MyTextField.swift */,
+				DB4D5F781D80BB5B0028E182 /* GoogleService-Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		DBFF39CB1D89AB370046D403 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				DBCE97CC1D7F10D300B93AED /* Main.storyboard */,
+				DBCE97D21D7F10D300B93AED /* Assets.xcassets */,
+				DBCE97D41D7F10D300B93AED /* LaunchScreen.storyboard */,
+			);
+			name = Assets;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

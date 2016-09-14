@@ -7,9 +7,12 @@
 //
 
 import UIKit
+import Firebase
 
 class FirebaseClient: NSObject {
     
+    let ref = FIRDatabase.database().reference()
+
     func formatPhoneNumber(phone:String) -> String {
         let a = phone.substringWithRange(phone.startIndex ..< phone.startIndex.advancedBy(3))
         let b = phone.substringWithRange(phone.startIndex.advancedBy(3) ..< phone.startIndex.advancedBy(6))
@@ -30,6 +33,22 @@ class FirebaseClient: NSObject {
         
     }
     
+    func getGroupData(completion: (result: NSDictionary?, error: NSError?) -> ()) {
+        self.ref.observeSingleEventOfType(.Value, withBlock: { snapshot in
+            if let groupData = snapshot.value!["Groups"] {
+                completion(result: groupData as? NSDictionary, error: nil)
+            }
+        })
+    }
+    
+    func getUserData(completion: (result: NSDictionary?, error: NSError?) -> ()) {
+        self.ref.observeSingleEventOfType(.Value, withBlock: { snapshot in
+            if let userData = snapshot.value!["Users"] {
+                completion(result: userData as? NSDictionary, error: nil)
+            }
+        })
+    }
+
     static let sharedInstance = FirebaseClient()
     private override init() {
         super.init()

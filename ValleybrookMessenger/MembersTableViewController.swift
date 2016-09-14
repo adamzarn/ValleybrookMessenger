@@ -22,37 +22,62 @@ class MembersTableViewController: UIViewController {
     var groupPhones: [String] = []
     var groupNames: [String] = []
     
-    func updateGroups() {
-        self.ref.observeSingleEventOfType(.Value, withBlock: { snapshot in
-            self.groupEmails = []
-            self.groupPhones = []
-            self.groupNames = []
-            if let groupInfo = snapshot.value!["Groups"]!![self.group] {
-
-                let emailDict = groupInfo!["Emails"] as! [String:String]
-                let phoneDict = groupInfo!["Phones"] as! [String:String]
-                let nameDict = groupInfo!["Names"] as! [String:String]
+    func getAllUsers() {
+        FirebaseClient.sharedInstance.getUserData { (result, error) -> () in
+            if let result = result {
                 
-                let sortedEmailKeys = Array(emailDict.keys).sort(<)
-                let sortedPhoneKeys = Array(phoneDict.keys).sort(<)
-                let sortedNameKeys = Array(nameDict.keys).sort(<)
+                self.groupEmails = []
+                self.groupPhones = []
+                self.groupNames = []
                 
-                for key in sortedEmailKeys {
-                    self.groupEmails.append(emailDict[key]!)
-                }
-                for key in sortedPhoneKeys {
-                    self.groupPhones.append(phoneDict[key]!)
-                }
-                for key in sortedNameKeys {
-                    self.groupNames.append(nameDict[key]!)
+                let allUserKeys = result.allKeys as! [String]
+                for key in allUserKeys {
+                    self.groupEmails.append(result[key]!["email"] as! String)
+                    self.groupPhones.append(result[key]!["phone"] as! String)
+                    self.groupNames.append(result[key]!["name"] as! String)
                 }
             }
-            
             self.activityIndicatorView.stopAnimating()
             self.activityIndicatorView.hidden = true
             self.myTableView.hidden = false
             self.myTableView.reloadData()
-        })
+        }
+    }
+    
+    func getMembersForGroup() {
+        FirebaseClient.sharedInstance.getGroupData { (result, error) -> () in
+            if let result = result {
+                
+                self.groupEmails = []
+                self.groupPhones = []
+                self.groupNames = []
+            
+                if let groupInfo = result[self.group] {
+
+                    let emailDict = groupInfo["Emails"] as! [String:String]
+                    let phoneDict = groupInfo["Phones"] as! [String:String]
+                    let nameDict = groupInfo["Names"] as! [String:String]
+                
+                    let sortedEmailKeys = Array(emailDict.keys).sort(<)
+                    let sortedPhoneKeys = Array(phoneDict.keys).sort(<)
+                    let sortedNameKeys = Array(nameDict.keys).sort(<)
+                
+                    for key in sortedEmailKeys {
+                        self.groupEmails.append(emailDict[key]!)
+                    }
+                    for key in sortedPhoneKeys {
+                        self.groupPhones.append(phoneDict[key]!)
+                    }
+                    for key in sortedNameKeys {
+                        self.groupNames.append(nameDict[key]!)
+                    }
+                }
+            }
+            self.activityIndicatorView.stopAnimating()
+            self.activityIndicatorView.hidden = true
+            self.myTableView.hidden = false
+            self.myTableView.reloadData()
+        }
     }
     
     override func viewDidLoad() {
@@ -69,7 +94,13 @@ class MembersTableViewController: UIViewController {
         myTableView.hidden = true
         activityIndicatorView.hidden = false
         activityIndicatorView.startAnimating()
-        updateGroups()
+        
+        if group == "All Users" {
+            getAllUsers()
+        } else {
+            getMembersForGroup()
+        }
+        
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {

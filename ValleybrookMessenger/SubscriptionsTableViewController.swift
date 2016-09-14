@@ -24,33 +24,28 @@ class SubscriptionsTableViewController: UIViewController {
     
     func updateGroups() {
         
-        self.ref.observeSingleEventOfType(.Value, withBlock: { snapshot in
-            self.groups = [:]
-            if let groupsChild = snapshot.value!["Groups"] {
-                if groupsChild != nil {
-                    let allGroups = groupsChild as! NSDictionary
-                    for item in allGroups {
-                        let key = item.key as! String
-                        if item.value is String {
-                            self.groups[key] = false
+        FirebaseClient.sharedInstance.getGroupData { (result, error) -> () in
+            if let result = result {
+                for item in result {
+                    let key = item.key as! String
+                    if item.value is String {
+                        self.groups[key] = false
+                    } else {
+                        let emails = item.value["Emails"]!!.allValues as! [String]
+                        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+                        if emails.contains(appDelegate.email!) {
+                            self.groups[key] = true
                         } else {
-                            let emails = item.value["Emails"]!!.allValues as! [String]
-                            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-                            if emails.contains(appDelegate.email!) {
-                                self.groups[key] = true
-                            } else {
-                                self.groups[key] = false
-                            }
+                            self.groups[key] = false
                         }
                     }
                 }
             }
-            
             self.activityIndicatorView.stopAnimating()
             self.activityIndicatorView.hidden = true
             self.myTableView.hidden = false
             self.myTableView.reloadData()
-        })
+        }
     }
     
     override func viewDidLoad() {
