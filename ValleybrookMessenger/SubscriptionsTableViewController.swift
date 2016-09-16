@@ -10,58 +10,42 @@ import UIKit
 import Firebase
 
 class SubscriptionsTableViewController: UIViewController {
+    
+    //Outlets*******************************************************************
 
     @IBOutlet weak var editProfileButton: UIBarButtonItem!
     @IBOutlet weak var logoutButton: UIBarButtonItem!
     @IBOutlet weak var barButton: UIBarButtonItem!
     @IBOutlet weak var myTableView: UITableView!
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
-    let ref = FIRDatabase.database().reference()
     
-    var groups: [String:Bool] = [:]
+    //Alerts********************************************************************
+    
+    let dataErrorAlert:UIAlertController = UIAlertController(title: "Error", message: "Data could not be retrieved from the server. Try again later.",preferredStyle: UIAlertControllerStyle.Alert)
+    
+    //Local Variables***********************************************************
+    
+    var groupsDict: [String:Bool] = [:]
     var groupKeys: [String] = []
     var subscribedToGroup: [Bool] = []
     
-    func updateGroups() {
-        
-        FirebaseClient.sharedInstance.getGroupData { (result, error) -> () in
-            if let result = result {
-                for item in result {
-                    let key = item.key as! String
-                    if item.value is String {
-                        self.groups[key] = false
-                    } else {
-                        let emails = item.value["Emails"]!!.allValues as! [String]
-                        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-                        if emails.contains(appDelegate.email!) {
-                            self.groups[key] = true
-                        } else {
-                            self.groups[key] = false
-                        }
-                    }
-                }
-            }
-            self.activityIndicatorView.stopAnimating()
-            self.activityIndicatorView.hidden = true
-            self.myTableView.hidden = false
-            self.myTableView.reloadData()
-        }
-    }
+    //Life Cycle Functions*******************************************************
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        dataErrorAlert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+        
         myTableView.hidden = true
-        activityIndicatorView.hidden = false
-        activityIndicatorView.startAnimating()
-
+        Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
+        
         myTableView.allowsSelection = false
         
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         barButton.title = "Logged in as \(appDelegate.email!)"
         barButton.enabled = false
         barButton.tintColor = appDelegate.darkValleybrookBlue
-
+        
         if appDelegate.admin {
             barButton.title = "Manage Groups as Administrator"
             barButton.enabled = true
@@ -69,34 +53,61 @@ class SubscriptionsTableViewController: UIViewController {
         
         logoutButton.tintColor = appDelegate.darkValleybrookBlue
         editProfileButton.tintColor = appDelegate.darkValleybrookBlue
-
+        
     }
     
     override func viewWillAppear(animated: Bool) {
         myTableView.hidden = true
-        activityIndicatorView.hidden = false
-        activityIndicatorView.startAnimating()
+        Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
         updateGroups()
     }
     
-    @IBAction func editProfileButtonPressed(sender: AnyObject) {
-        let createProfileVC = self.storyboard?.instantiateViewControllerWithIdentifier("CreateProfileViewController") as! CreateProfileViewController
-        createProfileVC.comingFromLogin = false
-        self.presentViewController(createProfileVC, animated: false, completion: nil)
+    //Methods*******************************************************************
+    
+    func updateGroups() {
+        
+        FirebaseClient.sharedInstance.getGroupData { (groups, error) -> () in
+            if let groups = groups {
+                for group in groups {
+                    let key = group.key as! String
+                    if group.value is String {
+                        self.groupsDict[key] = false
+                    } else {
+                        let emails = group.value["Emails"]!!.allValues as! [String]
+                        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+                        if emails.contains(appDelegate.email!) {
+                            self.groupsDict[key] = true
+                        } else {
+                            self.groupsDict[key] = false
+                        }
+                    }
+                }
+            } else {
+                self.presentViewController(self.dataErrorAlert, animated: true, completion: nil)
+            }
+            
+            Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
+            self.myTableView.hidden = false
+            self.myTableView.reloadData()
+        }
     }
+    
+    //Table View Functions*******************************************************
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! CustomCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! CustomSubscriptionCell
         
         groupKeys = []
         subscribedToGroup = []
         
-        for (key,value) in groups {
+        let sortedGroupKeys = Array(groupsDict.keys).sort(<)
+        
+        for key in sortedGroupKeys {
             groupKeys.append(key)
-            subscribedToGroup.append(value)
+            subscribedToGroup.append(groupsDict[key]!)
         }
-
+        
         cell.setCell(groupKeys[indexPath.row], subscribed: subscribedToGroup[indexPath.row])
         
         return cell
@@ -108,8 +119,10 @@ class SubscriptionsTableViewController: UIViewController {
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return groups.count
+        return groupsDict.count
     }
+    
+    //Actions*******************************************************************
     
     @IBAction func logoutButtonPressed(sender: AnyObject) {
         let firebaseAuth = FIRAuth.auth()
@@ -121,7 +134,7 @@ class SubscriptionsTableViewController: UIViewController {
         } catch let signOutError as NSError {
             print ("Error signing out: \(signOutError)")
         }
-
+        
     }
     
     @IBAction func manageGroupsButtonPressed(sender: AnyObject) {
@@ -130,6 +143,11 @@ class SubscriptionsTableViewController: UIViewController {
         
     }
     
-    
+    @IBAction func editProfileButtonPressed(sender: AnyObject) {
+        let createProfileVC = self.storyboard?.instantiateViewControllerWithIdentifier("CreateProfileViewController") as! CreateProfileViewController
+        createProfileVC.comingFromLogin = false
+        self.presentViewController(createProfileVC, animated: false, completion: nil)
+    }
+
     
 }

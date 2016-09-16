@@ -8,71 +8,45 @@
 
 import UIKit
 import MessageUI
-import Firebase
 
 class ConfigureMessageViewController: UIViewController, MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate, UITextFieldDelegate, UITextViewDelegate {
     
-    let ref = FIRDatabase.database().reference()
-    
-    var emailRecipients: [String] = []
-    var textRecipients: [String] = []
+    //Outlets*******************************************************************
     
     @IBOutlet weak var sendEmailButton: UIBarButtonItem!
     @IBOutlet weak var sendTextButton: UIBarButtonItem!
     @IBOutlet weak var toolBar: UIToolbar!
-    
     @IBOutlet weak var myTableView: UITableView!
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
-    
     @IBOutlet weak var subjectTextField: MyTextField!
     @IBOutlet weak var groupsTableView: UITableView!
     @IBOutlet weak var messageTextView: UITextView!
-    
     @IBOutlet weak var subjectLabel: UILabel!
     @IBOutlet weak var recipientsLabel: UILabel!
     @IBOutlet weak var messageLabel: UILabel!
     
+    //Alerts********************************************************************
+    
+    let dataErrorAlert:UIAlertController = UIAlertController(title: "Error", message: "Data could not be retrieved from the server. Try again later.",preferredStyle: UIAlertControllerStyle.Alert)
     let sendMailErrorAlert = UIAlertController(title: "Cannot Send Email", message: "Your device cannot send e-mail. Please check e-mail configuration and try again.", preferredStyle: UIAlertControllerStyle.Alert)
     let sendTextErrorAlert = UIAlertController(title: "Cannot Send Text", message: "Your device cannot send texts. Please check text configuration and try again.", preferredStyle: UIAlertControllerStyle.Alert)
     
-    var groups: [String:Int] = [:]
+    //Local Variables***********************************************************
+    
+    var emailRecipients: [String] = []
+    var textRecipients: [String] = []
+    var groupsDict: [String:Int] = [:]
     var groupKeys: [String] = []
     var groupCounts: [Int] = []
-
-    func getUserCount() {
-        FirebaseClient.sharedInstance.getUserData { (result, error) -> () in
-            if let result = result {
-                self.groups["All Users"] = result.count
-            }
-        }
-    }
     
-    func updateGroups() {
-        FirebaseClient.sharedInstance.getGroupData { (result, error) -> () in
-            if let result = result {
-                for item in result {
-                    let key = item.key as! String
-                    if item.value is String {
-                        self.groups[key] = 0
-                    } else {
-                        let emails = item.value["Emails"]
-                        self.groups[key] = emails!!.count
-                    }
-                }
-            }
-            self.activityIndicatorView.stopAnimating()
-            self.activityIndicatorView.hidden = true
-            self.myTableView.hidden = false
-            self.myTableView.reloadData()
-        }
-    }
+    //Life Cycle Functions*******************************************************
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        dataErrorAlert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         myTableView.hidden = true
-        activityIndicatorView.hidden = false
-        activityIndicatorView.startAnimating()
+        Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
         
         toolBar.translucent = false
         
@@ -100,7 +74,7 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
         self.view.addSubview(messageView)
         messageView.backgroundColor = appDelegate.darkValleybrookBlue
         print(recipientsView.frame.origin.y, subjectView.frame.origin.y, messageView.frame.origin.y)
-
+        
         recipientsLabel.layer.zPosition = 1
         subjectLabel.layer.zPosition = 1
         messageLabel.layer.zPosition = 1
@@ -121,12 +95,11 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         myTableView.hidden = true
-        activityIndicatorView.hidden = false
-        activityIndicatorView.startAnimating()
+        Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
         getUserCount()
         updateGroups()
         subscribeToKeyboardNotifications()
-
+        
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -135,6 +108,39 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
         unsubscribeFromKeyboardNotifications()
     }
     
+    //Methods*******************************************************************
+    
+    func getUserCount() {
+        FirebaseClient.sharedInstance.getUserData { (users, error) -> () in
+            if let users = users {
+                self.groupsDict["All Users"] = users.count
+            } else {
+                self.presentViewController(self.dataErrorAlert, animated: true, completion: nil)
+            }
+        }
+    }
+
+    func updateGroups() {
+        FirebaseClient.sharedInstance.getGroupData { (groups, error) -> () in
+            if let groups = groups {
+                for group in groups {
+                    let key = group.key as! String
+                    if group.value is String {
+                        self.groupsDict[key] = 0
+                    } else {
+                        let emails = group.value["Emails"]
+                        self.groupsDict[key] = emails!!.count
+                    }
+                }
+            } else {
+                self.presentViewController(self.dataErrorAlert, animated: true, completion: nil)
+            }
+            Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
+            self.myTableView.hidden = false
+            self.myTableView.reloadData()
+        }
+    }
+
     func getLabelRect(label: UILabel) -> CGRect {
         return CGRectMake(label.frame.origin.x,label.frame.origin.y + 9.0, label.frame.width,label.frame.height)
     }
@@ -142,75 +148,8 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
     func didTapView() {
         self.view.endEditing(true)
     }
-
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return groups.count
-    }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! CustomRecipientsCell
-        
-        cell.group.textColor = UIColor.blackColor()
-        cell.members.textColor = UIColor.blackColor()
-        cell.subscribed.enabled = true
-        
-        groupKeys = []
-        groupCounts = []
-        
-        let sortedGroupKeys = Array(groups.keys).sort(<)
-        
-        for key in sortedGroupKeys {
-            groupKeys.append(key)
-            groupCounts.append(groups[key]!)
-        }
-
-        cell.setCell(groupKeys[indexPath.row], subscribed: false)
-        
-        if groupCounts[indexPath.row] == 1 {
-            cell.members.text = "1 member"
-        } else {
-            cell.members.text = "\(groupCounts[indexPath.row]) members"
-        }
-        
-        if groupCounts[indexPath.row] == 0 {
-            cell.subscribed.enabled = false
-            cell.group.textColor = UIColor.lightGrayColor()
-            cell.members.textColor = UIColor.lightGrayColor()
-        }
-        
-        return cell
-        
-    }
-    
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 45.0
-    }
-    
-    @IBAction func sendEmailButtonTapped(sender: AnyObject) {
-        let mailComposeViewController = configuredMailComposeViewController()
-        if MFMailComposeViewController.canSendMail() {
-            self.presentViewController(mailComposeViewController, animated: false, completion: nil)
-        } else {
-            self.presentViewController(sendMailErrorAlert, animated: false, completion: nil)
-        }
-    }
-    
-    @IBAction func sendTextButtonTapped(sender: AnyObject) {
-        
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        if appDelegate.textRecipients.count > 10 {
-            sendTextErrorAlert.message = "You cannot send texts to more than 10 people at once."
-            self.presentViewController(sendTextErrorAlert,animated:true,completion: nil)
-        } else {
-            let textMessageViewController = configuredMessageComposeViewController()
-            if MFMessageComposeViewController.canSendText() {
-                self.presentViewController(textMessageViewController, animated: false, completion: nil)
-            } else {
-                self.presentViewController(sendTextErrorAlert, animated: false, completion: nil)
-            }
-        }
-    }
+    //Message Functions**********************************************************
     
     func configuredMessageComposeViewController() -> MFMessageComposeViewController {
         
@@ -231,7 +170,7 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
         let mailComposerVC = MFMailComposeViewController()
-        mailComposerVC.mailComposeDelegate = self // Extremely important to set the --mailComposeDelegate-- property, NOT the --delegate-- property
+        mailComposerVC.mailComposeDelegate = self
         
         mailComposerVC.setToRecipients(appDelegate.emailRecipients)
         mailComposerVC.setSubject(subjectTextField.text!)
@@ -248,46 +187,7 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
         controller.dismissViewControllerAnimated(true, completion: nil)
     }
     
-    func textFieldDidBeginEditing(textField: UITextField) {
-        textField.becomeFirstResponder()
-        if textField.text == "Subject" {
-            textField.text = ""
-            textField.textColor = UIColor.blackColor()
-        }
-    }
-    
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        if textField.text == "" {
-            textField.text = "Subject"
-            textField.textColor = UIColor.lightGrayColor()
-        }
-        return true
-    }
-    
-    func textFieldDidEndEditing(textField: UITextField) {
-        if textField.text == "" {
-            textField.text = "Subject"
-            textField.textColor = UIColor.lightGrayColor()
-        }
-    }
-    
-    func textViewDidBeginEditing(textView: UITextView) {
-        textView.becomeFirstResponder()
-        if textView.text == "Type message here..." {
-            textView.text = ""
-            textView.textColor = UIColor.blackColor()
-        }
-    }
-    
-    func textViewShouldEndEditing(textView: UITextView) -> Bool {
-        textView.resignFirstResponder()
-        if textView.text == "" {
-            textView.text = "Type message here..."
-            textView.textColor = UIColor.lightGrayColor()
-        }
-        return true
-    }
+    //Keyboard Notifications**************************************************
     
     func subscribeToKeyboardNotifications() {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ConfigureMessageViewController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification,object: nil)
@@ -317,7 +217,111 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
         let keyboardSize = userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue
         return keyboardSize.CGRectValue().height - navBarHeight
     }
+    
+    //Text Field Functions*******************************************************
+    
+    func textFieldDidBeginEditing(textField: UITextField) {
+        textField.becomeFirstResponder()
+        if textField.text == "Subject" {
+            textField.text = ""
+            textField.textColor = UIColor.blackColor()
+        }
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        if textField.text == "" {
+            textField.text = "Subject"
+            textField.textColor = UIColor.lightGrayColor()
+        }
+        return true
+    }
+    
+    func textFieldDidEndEditing(textField: UITextField) {
+        if textField.text == "" {
+            textField.text = "Subject"
+            textField.textColor = UIColor.lightGrayColor()
+        }
+    }
+    
+    //Text View Functions*******************************************************
+    
+    func textViewDidBeginEditing(textView: UITextView) {
+        textView.becomeFirstResponder()
+        if textView.text == "Type message here..." {
+            textView.text = ""
+            textView.textColor = UIColor.blackColor()
+        }
+    }
+    
+    func textViewShouldEndEditing(textView: UITextView) -> Bool {
+        textView.resignFirstResponder()
+        if textView.text == "" {
+            textView.text = "Type message here..."
+            textView.textColor = UIColor.lightGrayColor()
+        }
+        return true
+    }
+    
+    //Table View Functions*******************************************************
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return groupsDict.count
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! CustomRecipientsCell
+        
+        cell.group.textColor = UIColor.blackColor()
+        cell.members.textColor = UIColor.blackColor()
+        cell.subscribed.enabled = true
+        
+        groupKeys = []
+        groupCounts = []
+        
+        let sortedGroupKeys = Array(groupsDict.keys).sort(<)
+        
+        for key in sortedGroupKeys {
+            groupKeys.append(key)
+            groupCounts.append(groupsDict[key]!)
+        }
+        
+        if groupCounts[indexPath.row] == 1 {
+            cell.members.text = "1 member"
+        } else {
+            cell.members.text = "\(groupCounts[indexPath.row]) members"
+        }
+        
+        var attributedTitleText: NSMutableAttributedString?
+        var attributedSubtitleText: NSMutableAttributedString?
+        
+        if groupKeys[indexPath.row] == "All Users" {
+            attributedTitleText = NSMutableAttributedString(string: "All Users", attributes: [NSFontAttributeName : UIFont.boldSystemFontOfSize(16)])
+            attributedSubtitleText = NSMutableAttributedString(string: cell.members.text!, attributes: [NSFontAttributeName : UIFont.boldSystemFontOfSize(11)])
+            cell.setCell(attributedTitleText!, subscribed: false)
+            cell.members.attributedText = attributedSubtitleText
+        } else {
+            cell.group.text = groupKeys[indexPath.row]
+            cell.subscribed.on = false
+        }
+        
+        if groupCounts[indexPath.row] == 0 {
+            cell.subscribed.enabled = false
+            cell.group.textColor = UIColor.lightGrayColor()
+            cell.members.textColor = UIColor.lightGrayColor()
+        }
+        
+        return cell
+        
+    }
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 45.0
+    }
 
+    //Actions*******************************************************************
+    
     @IBAction func resetButtonPressed(sender: AnyObject) {
         subjectTextField.text = "Subject"
         subjectTextField.textColor = UIColor.lightGrayColor()
@@ -326,4 +330,29 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
         myTableView.reloadData()
     }
     
+    @IBAction func sendEmailButtonTapped(sender: AnyObject) {
+        let mailComposeViewController = configuredMailComposeViewController()
+        if MFMailComposeViewController.canSendMail() {
+            self.presentViewController(mailComposeViewController, animated: false, completion: nil)
+        } else {
+            self.presentViewController(sendMailErrorAlert, animated: false, completion: nil)
+        }
+    }
+    
+    @IBAction func sendTextButtonTapped(sender: AnyObject) {
+        
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        if appDelegate.textRecipients.count > 10 {
+            sendTextErrorAlert.message = "You cannot send texts to more than 10 people at once."
+            self.presentViewController(sendTextErrorAlert,animated:true,completion: nil)
+        } else {
+            let textMessageViewController = configuredMessageComposeViewController()
+            if MFMessageComposeViewController.canSendText() {
+                self.presentViewController(textMessageViewController, animated: false, completion: nil)
+            } else {
+                self.presentViewController(sendTextErrorAlert, animated: false, completion: nil)
+            }
+        }
+    }
+
 }

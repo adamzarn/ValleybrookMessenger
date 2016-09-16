@@ -11,6 +11,8 @@ import Firebase
 
 class CreateProfileViewController: UIViewController, UITextFieldDelegate {
     
+    //Outlets*******************************************************************
+    
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet weak var nameTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
@@ -21,11 +23,15 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var navItem: UINavigationItem!
     @IBOutlet weak var cancelButton: UIBarButtonItem!
     
+    //Alerts********************************************************************
+    
     let createProfileErrorAlert = UIAlertController(title: "Error", message: "Error", preferredStyle: UIAlertControllerStyle.Alert)
     
-    let ref = FIRDatabase.database().reference()
+    //Local Variables***********************************************************
     
     var comingFromLogin = true
+    
+    //Life Cycle Functions*******************************************************
 
     override func viewDidLoad() {
         
@@ -68,10 +74,6 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
         cancelButton.tintColor = appDelegate.darkValleybrookBlue
     }
     
-    func doneButtonPressed() {
-        self.view.endEditing(true)
-    }
-    
     override func viewWillAppear(animated: Bool) {
         
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -86,17 +88,25 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
             passwordTextField!.enabled = false
             verifyPasswordTextField!.enabled = false
             submitButton.setTitle("Submit Changes", forState: .Normal)
-
-            let userRef = self.ref.child("Users").child(appDelegate.uid!)
             
-            userRef.observeSingleEventOfType(.Value, withBlock: { snapshot in
-                let user = snapshot.value!
-                self.nameTextField.text = user["name"] as? String
-                self.emailTextField.text = user["email"] as? String
-                let phone = user["phone"] as! String
-                self.phoneTextField.text = FirebaseClient.sharedInstance.formatPhoneNumber(phone)
-            })
+            FirebaseClient.sharedInstance.getUserData { (users, error) -> () in
+                if let users = users {
+                    let user = users[appDelegate.uid!] as! NSDictionary
+                    self.nameTextField.text = user["name"] as? String
+                    self.emailTextField.text = user["email"] as? String
+                    let phone = user["phone"] as! String
+                    self.phoneTextField.text = Methods.sharedInstance.formatPhoneNumber(phone)
+                } else {
+                    print(error)
+                }
+            }
         }
+    }
+    
+    //Methods*******************************************************************
+    
+    func doneButtonPressed() {
+        self.view.endEditing(true)
     }
     
     func setUp(object: AnyObject?) {
@@ -106,83 +116,10 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
         object!.layer.borderWidth = 1
     }
     
-    @IBAction func cancelButtonPressed(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
-    }
-    
     func endWithError(message: String) {
         self.createProfileErrorAlert.message = message
         self.presentViewController(self.createProfileErrorAlert, animated: true, completion: nil)
-        self.activityIndicatorView.hidden = true
-        self.activityIndicatorView.stopAnimating()
-    }
-    
-    @IBAction func submitButtonPressed(sender: AnyObject) {
-        
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        let unformattedPhone = FirebaseClient.sharedInstance.undoPhoneNumberFormat(phoneTextField.text!)
-        
-        activityIndicatorView.startAnimating()
-        activityIndicatorView.hidden = false
-        
-        if comingFromLogin {
-        
-            if passwordTextField.text != verifyPasswordTextField.text {
-                
-                self.endWithError("The second password does not match the first.")
-                
-            } else if unformattedPhone.characters.count != 10 {
-                
-                self.endWithError("Your phone number must be exactly 10 digits long.")
-
-            } else if nameTextField.text! == "" {
-                
-                self.endWithError("You must provide a name.")
-                
-            } else {
-                
-                let email = emailTextField.text
-                let password = passwordTextField.text
-                FIRAuth.auth()?.createUserWithEmail(email!, password: password!) { (user, error) in
-                    if let error = error {
-                        print(error.localizedDescription)
-                        self.createProfileErrorAlert.message = error.localizedDescription
-                        self.presentViewController(self.createProfileErrorAlert, animated: true, completion: nil)
-                            self.activityIndicatorView.hidden = true
-                            self.activityIndicatorView.stopAnimating()
-                        return
-                    }
-                    self.setDisplayName(user!)
-            }
-        }
-        
-        } else {
-
-            if unformattedPhone.characters.count == 10 && nameTextField.text! != "" {
-            
-                let userRef = self.ref.child("Users").child(appDelegate.uid!)
-                
-                userRef.updateChildValues(["name":nameTextField.text!,
-                                            "email":emailTextField.text!,
-                                            "phone":unformattedPhone])
-                
-                appDelegate.name = nameTextField.text!
-                appDelegate.phone = unformattedPhone
-                appDelegate.email = emailTextField.text!
-                
-                let subscriptionsVC = storyboard?.instantiateViewControllerWithIdentifier("SubscriptionsTableViewController") as! SubscriptionsTableViewController
-                self.presentViewController(subscriptionsVC, animated: false, completion: nil)
-                
-            } else {
-                if unformattedPhone.characters.count != 10 {
-                    self.endWithError("Your phone number must be exactly 10 digits long.")
-                } else {
-                    self.endWithError("You must provide a name.")
-                }
-            }
-            
-        }
-        
+        Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
     }
     
     func setDisplayName(user: FIRUser) {
@@ -198,17 +135,8 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
     }
     
     func signedIn(user: FIRUser?) {
-        let newUser = User(uid: user!.uid, name: nameTextField.text!, email: user!.email!, phone: FirebaseClient.sharedInstance.undoPhoneNumberFormat(phoneTextField.text!), admin: false)
         
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        
-        appDelegate.uid = user!.uid
-        appDelegate.email = user!.email
-        appDelegate.phone = FirebaseClient.sharedInstance.undoPhoneNumberFormat(phoneTextField.text!)
-        appDelegate.name = nameTextField.text!
-        
-        let userRef = self.ref.child("Users/\(user!.uid)")
-        userRef.setValue(newUser.toAnyObject())
+        FirebaseClient.sharedInstance.addNewUser(user!.uid, name: nameTextField.text!, email: user!.email!, phone: Methods.sharedInstance.undoPhoneNumberFormat(phoneTextField.text!))
         
         MeasurementHelper.sendLoginEvent()
         
@@ -216,14 +144,13 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
         AppState.sharedInstance.photoUrl = user?.photoURL
         AppState.sharedInstance.signedIn = true
         NSNotificationCenter.defaultCenter().postNotificationName(Constants.NotificationKeys.SignedIn, object: nil, userInfo: nil)
-        let subscriptionsVC = storyboard?.instantiateViewControllerWithIdentifier("SubscriptionsTableViewController") as! SubscriptionsTableViewController
-        self.presentViewController(subscriptionsVC, animated: false, completion: nil)
-        
-        activityIndicatorView.hidden = true
-        activityIndicatorView.stopAnimating()
+        let navController = self.storyboard?.instantiateViewControllerWithIdentifier("NavigationController") as! UINavigationController
+        self.presentViewController(navController, animated: false, completion: nil)
+        Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
         
     }
 
+    //Text Field Functions*******************************************************
     
     func textFieldDidBeginEditing(textField: UITextField) {
         textField.becomeFirstResponder()
@@ -251,15 +178,6 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
         }
         textField.resignFirstResponder()
         return true
-    }
-    
-
-    @IBAction func passwordChanged(sender: AnyObject) {
-        if passwordTextField.text != "" {
-            verifyPasswordTextField.enabled = true
-        } else {
-            verifyPasswordTextField.enabled = false
-        }
     }
     
     func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
@@ -301,5 +219,76 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
             return true
         }
     }
+    
+    //Actions*******************************************************************
+    
+    @IBAction func cancelButtonPressed(sender: AnyObject) {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    @IBAction func submitButtonPressed(sender: AnyObject) {
+        
+        let unformattedPhone = Methods.sharedInstance.undoPhoneNumberFormat(phoneTextField.text!)
+        
+        Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
+        
+        if comingFromLogin {
+            
+            if passwordTextField.text != verifyPasswordTextField.text {
+                
+                self.endWithError("The second password does not match the first.")
+                
+            } else if unformattedPhone.characters.count != 10 {
+                
+                self.endWithError("Your phone number must be exactly 10 digits long.")
+                
+            } else if nameTextField.text! == "" {
+                
+                self.endWithError("You must provide a name.")
+                
+            } else {
+                
+                let email = emailTextField.text
+                let password = passwordTextField.text
+                FIRAuth.auth()?.createUserWithEmail(email!, password: password!) { (user, error) in
+                    if let error = error {
+                        print(error.localizedDescription)
+                        self.createProfileErrorAlert.message = error.localizedDescription
+                        self.presentViewController(self.createProfileErrorAlert, animated: true, completion: nil)
+                        Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
+                        return
+                    }
+                    self.setDisplayName(user!)
+                }
+            }
+            
+        } else {
+            
+            if unformattedPhone.characters.count == 10 && nameTextField.text! != "" {
+                
+                FirebaseClient.sharedInstance.updateUserInfo(nameTextField.text!, email: emailTextField.text!, phone: unformattedPhone)
+                
+                self.dismissViewControllerAnimated(true, completion: nil)
+                
+            } else {
+                if unformattedPhone.characters.count != 10 {
+                    self.endWithError("Your phone number must be exactly 10 digits long.")
+                } else {
+                    self.endWithError("You must provide a name.")
+                }
+            }
+            
+        }
+        
+    }
+    
+    @IBAction func passwordChanged(sender: AnyObject) {
+        if passwordTextField.text != "" {
+            verifyPasswordTextField.enabled = true
+        } else {
+            verifyPasswordTextField.enabled = false
+        }
+    }
+
 
 }

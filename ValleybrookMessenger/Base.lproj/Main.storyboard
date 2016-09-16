@@ -696,7 +696,7 @@
                                 <rect key="frame" x="0.0" y="64" width="414" height="628"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="Cell" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="30" id="ScP-r3-T9C" customClass="CustomCell" customModule="ValleybrookMessenger" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" restorationIdentifier="Cell" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="30" id="ScP-r3-T9C" customClass="CustomSubscriptionCell" customModule="ValleybrookMessenger" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="414" height="30"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ScP-r3-T9C" id="bNQ-tA-SKG">
@@ -725,7 +725,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="group" destination="Kbj-w2-QPJ" id="f4g-6r-a1b"/>
+                                            <outlet property="groupLabel" destination="Kbj-w2-QPJ" id="5Ct-BG-xxF"/>
                                             <outlet property="subscribed" destination="uNR-Pf-aUw" id="vjm-m0-Ou4"/>
                                         </connections>
                                     </tableViewCell>

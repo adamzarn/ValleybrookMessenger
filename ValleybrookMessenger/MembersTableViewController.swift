@@ -7,52 +7,84 @@
 //
 
 import UIKit
-import Firebase
 
 class MembersTableViewController: UIViewController {
     
-    let ref = FIRDatabase.database().reference()
+    //Outlets*******************************************************************
     
     @IBOutlet weak var navItem: UINavigationItem!
     @IBOutlet weak var myTableView: UITableView!
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
+    
+    //Alerts********************************************************************
+    
+    let dataErrorAlert:UIAlertController = UIAlertController(title: "Error", message: "Data could not be retrieved from the server. Try again later.",preferredStyle: UIAlertControllerStyle.Alert)
+    
+    //Local Variables***********************************************************
     
     var group: String = ""
     var groupEmails: [String] = []
     var groupPhones: [String] = []
     var groupNames: [String] = []
     
+    //Life Cycle Functions*******************************************************
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        dataErrorAlert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+        myTableView.hidden = true
+        Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
+        navItem.title = group
+        
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        myTableView.hidden = true
+        Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
+        
+        if group == "All Users" {
+            getAllUsers()
+        } else {
+            getMembersForGroup()
+        }
+        
+    }
+    
+    //Methods*******************************************************************
+    
     func getAllUsers() {
-        FirebaseClient.sharedInstance.getUserData { (result, error) -> () in
-            if let result = result {
+        FirebaseClient.sharedInstance.getUserData { (users, error) -> () in
+            if let users = users {
                 
                 self.groupEmails = []
                 self.groupPhones = []
                 self.groupNames = []
                 
-                let allUserKeys = result.allKeys as! [String]
+                let allUserKeys = users.allKeys as! [String]
                 for key in allUserKeys {
-                    self.groupEmails.append(result[key]!["email"] as! String)
-                    self.groupPhones.append(result[key]!["phone"] as! String)
-                    self.groupNames.append(result[key]!["name"] as! String)
+                    self.groupEmails.append(users[key]!["email"] as! String)
+                    self.groupPhones.append(users[key]!["phone"] as! String)
+                    self.groupNames.append(users[key]!["name"] as! String)
                 }
+            } else {
+                self.presentViewController(self.dataErrorAlert, animated: true, completion: nil)
             }
-            self.activityIndicatorView.stopAnimating()
-            self.activityIndicatorView.hidden = true
+            Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
             self.myTableView.hidden = false
             self.myTableView.reloadData()
         }
     }
     
     func getMembersForGroup() {
-        FirebaseClient.sharedInstance.getGroupData { (result, error) -> () in
-            if let result = result {
+        FirebaseClient.sharedInstance.getGroupData { (groups, error) -> () in
+            if let groups = groups {
                 
                 self.groupEmails = []
                 self.groupPhones = []
                 self.groupNames = []
             
-                if let groupInfo = result[self.group] {
+                if let groupInfo = groups[self.group] {
 
                     let emailDict = groupInfo["Emails"] as! [String:String]
                     let phoneDict = groupInfo["Phones"] as! [String:String]
@@ -72,36 +104,25 @@ class MembersTableViewController: UIViewController {
                         self.groupNames.append(nameDict[key]!)
                     }
                 }
+            } else {
+                self.presentViewController(self.dataErrorAlert, animated: true, completion: nil)
             }
-            self.activityIndicatorView.stopAnimating()
-            self.activityIndicatorView.hidden = true
+            Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
             self.myTableView.hidden = false
             self.myTableView.reloadData()
         }
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        myTableView.hidden = true
-        activityIndicatorView.hidden = false
-        activityIndicatorView.startAnimating()
-        navItem.title = group
-        
+    private func callNumber(phoneNumber:String) {
+        if let phoneCallURL:NSURL = NSURL(string: "tel://\(phoneNumber)") {
+            let application:UIApplication = UIApplication.sharedApplication()
+            if (application.canOpenURL(phoneCallURL)) {
+                application.openURL(phoneCallURL)
+            }
+        }
     }
     
-    override func viewWillAppear(animated: Bool) {
-        myTableView.hidden = true
-        activityIndicatorView.hidden = false
-        activityIndicatorView.startAnimating()
-        
-        if group == "All Users" {
-            getAllUsers()
-        } else {
-            getMembersForGroup()
-        }
-        
-    }
+    //Table View Functions*******************************************************
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
@@ -123,15 +144,6 @@ class MembersTableViewController: UIViewController {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         callNumber(groupPhones[indexPath.row])
-    }
-    
-    private func callNumber(phoneNumber:String) {
-        if let phoneCallURL:NSURL = NSURL(string: "tel://\(phoneNumber)") {
-            let application:UIApplication = UIApplication.sharedApplication()
-            if (application.canOpenURL(phoneCallURL)) {
-                application.openURL(phoneCallURL);
-            }
-        }
     }
     
 }

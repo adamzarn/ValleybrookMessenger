@@ -7,39 +7,45 @@
 //
 
 import UIKit
-import Firebase
 
 class CustomRecipientsCell: UITableViewCell {
     
-    let ref = FIRDatabase.database().reference()
+    //Outlets*******************************************************************
     
     @IBOutlet weak var group: UILabel!
     @IBOutlet weak var members: UILabel!
     @IBOutlet weak var subscribed: UISwitch!
+    
+    //Local Variables***********************************************************
+    
     var switchFlippedOn = false
     
-    func setCell(group: String, subscribed: Bool) {
-        self.group.text = group
+    //Methods*******************************************************************
+    
+    func setCell(group: NSMutableAttributedString, subscribed: Bool) {
+        self.group.attributedText = group
         self.subscribed.on = subscribed
     }
+    
+    //Actions*******************************************************************
 
     @IBAction func switchFlipped(sender: AnyObject) {
         
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        let object = self.group.text!
+        let group = self.group.text!
         
-        if object == "All Users" {
-            FirebaseClient.sharedInstance.getUserData { (result, error) -> () in
-                if let result = result {
+        if group == "All Users" {
+            FirebaseClient.sharedInstance.getUserData { (users, error) -> () in
+                if let users = users {
                     
                     if self.subscribed.on {
                         
                         self.switchFlippedOn = true
                         
-                        let allUserKeys = result.allKeys as! [String]
+                        let allUserKeys = users.allKeys as! [String]
                         
                         for key in allUserKeys {
-                            let user = result[key] as! NSDictionary
+                            let user = users[key] as! NSDictionary
                             appDelegate.emailRecipients.append(user["email"] as! String)
                             appDelegate.emailRecipients.append(user["phone"] as! String)
                         }
@@ -48,10 +54,10 @@ class CustomRecipientsCell: UITableViewCell {
                         
                         self.switchFlippedOn = false
                         
-                        let allUserKeys = result.allKeys as! [String]
+                        let allUserKeys = users.allKeys as! [String]
                         
                         for key in allUserKeys {
-                            let user = result[key] as! NSDictionary
+                            let user = users[key] as! NSDictionary
                             let email = user["email"] as! String
                             let phone = user["phone"] as! String
                             appDelegate.emailRecipients = appDelegate.emailRecipients.filter{ $0 != email }
@@ -67,10 +73,10 @@ class CustomRecipientsCell: UITableViewCell {
             
         } else {
         
-            FirebaseClient.sharedInstance.getGroupData { (result, error) -> () in
-                if let result = result {
+            FirebaseClient.sharedInstance.getGroupData { (groups, error) -> () in
+                if let groups = groups {
                     
-                    let group = result[object] as! NSDictionary
+                    let group = groups[group] as! NSDictionary
                     let emails = group["Emails"] as! NSDictionary
                     let phones = group["Phones"] as! NSDictionary
                     

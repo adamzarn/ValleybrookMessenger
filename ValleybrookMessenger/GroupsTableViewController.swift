@@ -7,68 +7,43 @@
 //
 
 import UIKit
-import Firebase
 
-class GroupsTableViewController: UIViewController {
+class GroupsTableViewController: UIViewController, UITableViewDelegate {
     
-    var alert = UIAlertController(title: "Add New Group", message: "", preferredStyle: UIAlertControllerStyle.Alert)
+    //Outlets*******************************************************************
     
     @IBOutlet weak var createMessageButton: UIBarButtonItem!
     @IBOutlet weak var addGroupButton: UIBarButtonItem!
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
-    let ref = FIRDatabase.database().reference()
-    
     @IBOutlet weak var myTableView: UITableView!
     
-    var groups: [String:Int] = [:]
+    //Alerts********************************************************************
+    
+    let alert = UIAlertController(title: "Add New Group", message: "", preferredStyle: UIAlertControllerStyle.Alert)
+    let dataErrorAlert:UIAlertController = UIAlertController(title: "Error", message: "Data could not be retrieved from the server. Try again later.",preferredStyle: UIAlertControllerStyle.Alert)
+    
+    //Local Variables***********************************************************
+    
+    var groupsDict: [String:Int] = [:]
     var groupKeys: [String] = []
     var groupCounts: [Int] = []
     
-    func getUserCount() {
-        FirebaseClient.sharedInstance.getUserData { (result, error) -> () in
-            if let result = result {
-                self.groups["All Users"] = result.count
-            }
-        }
-    }
-
-    func updateGroups() {
-        FirebaseClient.sharedInstance.getGroupData { (result, error) -> () in
-            if let result = result {
-                for item in result {
-                    let key = item.key as! String
-                    if item.value is String {
-                        self.groups[key] = 0
-                    } else {
-                        let emails = item.value["Emails"]
-                        self.groups[key] = emails!!.count
-                    }
-                }
-            }
-            self.activityIndicatorView.stopAnimating()
-            self.activityIndicatorView.hidden = true
-            self.myTableView.hidden = false
-            self.myTableView.reloadData()
-        }
-    }
+    //Life Cycle Functions*******************************************************
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        dataErrorAlert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         self.navigationController!.navigationBar.translucent = false
         
         myTableView.hidden = true
-        activityIndicatorView.hidden = false
-        activityIndicatorView.startAnimating()
-
+        Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
+        
         alert.addTextFieldWithConfigurationHandler(configurationTextField)
         
         self.alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (UIAlertAction) in
             
-            let groupsRef = self.ref.child("Groups")
-            let newGroupRef = groupsRef.child(self.alert.textFields![0].text!)
-            
-            newGroupRef.setValue("")
+            FirebaseClient.sharedInstance.addGroup(self.alert.textFields![0].text!)
             
             self.alert.textFields![0].text = ""
             
@@ -89,17 +64,53 @@ class GroupsTableViewController: UIViewController {
     
     override func viewWillAppear(animated: Bool) {
         myTableView.hidden = true
-        activityIndicatorView.hidden = false
-        activityIndicatorView.startAnimating()
+        Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
         getUserCount()
         updateGroups()
     }
+    
+    //Methods*******************************************************************
+    
+    func getUserCount() {
+        FirebaseClient.sharedInstance.getUserData { (users, error) -> () in
+            if let users = users {
+                self.groupsDict["All Users"] = users.count
+            } else {
+                self.presentViewController(self.dataErrorAlert, animated: true, completion: nil)
+            }
+        }
+    }
+
+    func updateGroups() {
+        FirebaseClient.sharedInstance.getGroupData { (groups, error) -> () in
+            if let groups = groups {
+                for group in groups {
+                    let key = group.key as! String
+                    if group.value is String {
+                        self.groupsDict[key] = 0
+                    } else {
+                        let emails = group.value["Emails"]
+                        self.groupsDict[key] = emails!!.count
+                    }
+                }
+            } else {
+                self.presentViewController(self.dataErrorAlert, animated: true, completion: nil)
+            }
+            Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
+            self.myTableView.hidden = false
+            self.myTableView.reloadData()
+        }
+    }
+    
+    //Text Field Functions*******************************************************
     
     func configurationTextField(textField: UITextField!) {
         if let textField = textField {
             textField.placeholder = "Enter New Group Here"
         }
     }
+    
+    //Table View Functions*******************************************************
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
@@ -111,21 +122,30 @@ class GroupsTableViewController: UIViewController {
         groupKeys = []
         groupCounts = []
         
-        let sortedGroupKeys = Array(groups.keys).sort(<)
+        let sortedGroupKeys = Array(groupsDict.keys).sort(<)
         
         for key in sortedGroupKeys {
             groupKeys.append(key)
-            groupCounts.append(groups[key]!)
+            groupCounts.append(groupsDict[key]!)
         }
-        
-        cell.textLabel!.text = groupKeys[indexPath.row]
         
         cell.imageView!.image = UIImage(named: "Group.png")
+        
         if groupCounts[indexPath.row] == 1 {
-            cell.detailTextLabel?.text = "1 Member"
+            cell.detailTextLabel!.text = "1 Member"
         } else {
-            cell.detailTextLabel?.text = "\(groupCounts[indexPath.row]) Members"
+            cell.detailTextLabel!.text = "\(groupCounts[indexPath.row]) Members"
         }
+        
+        if groupKeys[indexPath.row] == "All Users" {
+            let attributedTitleText = NSMutableAttributedString(string: "All Users", attributes: [NSFontAttributeName : UIFont.boldSystemFontOfSize(16)])
+            let attributedSubtitleText = NSMutableAttributedString(string: cell.detailTextLabel!.text!, attributes: [NSFontAttributeName : UIFont.boldSystemFontOfSize(11)])
+            cell.textLabel!.attributedText = attributedTitleText
+            cell.detailTextLabel!.attributedText = attributedSubtitleText
+        } else {
+            cell.textLabel!.text = groupKeys[indexPath.row]
+        }
+
         
         if groupCounts[indexPath.row] == 0 {
             cell.textLabel!.textColor = UIColor.lightGrayColor()
@@ -138,24 +158,29 @@ class GroupsTableViewController: UIViewController {
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 45.0
-
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return groups.count
+        return groupsDict.count
+    }
+    
+    func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
+        if groupKeys[indexPath.row] == "All Users" {
+            return .None
+        } else {
+            return .Delete
+        }
     }
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
 
-            let groupToRemove = groupKeys[indexPath.row]
-            
-            groups.removeValueForKey(groupToRemove)
-            let groupRef = self.ref.child("Groups").child(groupToRemove)
-            groupRef.removeValue()
-            
-            myTableView.reloadData()
-        }
+        let groupToRemove = groupKeys[indexPath.row]
+    
+        groupsDict.removeValueForKey(groupToRemove)
+        FirebaseClient.sharedInstance.removeGroup(groupToRemove)
+    
+        myTableView.reloadData()
+        
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -166,28 +191,16 @@ class GroupsTableViewController: UIViewController {
         }
         
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        
+
     }
 
+    //Actions*******************************************************************
+    
     @IBAction func createMessageButtonPressed(sender: AnyObject) {
         let configureMessageVC = storyboard?.instantiateViewControllerWithIdentifier("ConfigureMessageViewController") as! ConfigureMessageViewController
         self.navigationController?.pushViewController(configureMessageVC, animated: true)
     }
     
-    @IBAction func logoutButtonPressed(sender: AnyObject) {
-        let firebaseAuth = FIRAuth.auth()
-        do {
-            try firebaseAuth?.signOut()
-            AppState.sharedInstance.signedIn = false
-            let loginVC = storyboard?.instantiateViewControllerWithIdentifier("LoginViewController") as! LoginViewController
-            self.presentViewController(loginVC, animated: false, completion: nil)
-        } catch let signOutError as NSError {
-            print ("Error signing out: \(signOutError)")
-        }
-        print(AppState.sharedInstance.signedIn)
-        
-    }
-
     @IBAction func addGroupButtonPressed(sender: AnyObject) {
         self.presentViewController(alert, animated: true, completion: nil)
     }

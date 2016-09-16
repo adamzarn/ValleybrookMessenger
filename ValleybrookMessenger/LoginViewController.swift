@@ -11,17 +11,26 @@ import Firebase
 
 class LoginViewController: UIViewController, UITextFieldDelegate {
     
+    let ref = FIRDatabase.database().reference()
+    
+    //Outlets*******************************************************************
+    
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var loginAsChurchMemberButton: UIButton!
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet weak var createProfileButton: UIButton!
     
+    //Alerts********************************************************************
+    
     let loginAsAdminError = UIAlertController(title: "Unauthorized.", message: "You are not an administrator.", preferredStyle: UIAlertControllerStyle.Alert)
     let loginError = UIAlertController(title: "Bad Email or Password.", message: "Please try again or create an account.", preferredStyle: UIAlertControllerStyle.Alert)
     
-    let ref = FIRDatabase.database().reference()
+    //Local Variables***********************************************************
+    
     var loggingInAsAdmin = false
+    
+    //Life Cycle Functions*******************************************************
     
     override func viewDidLoad() {
         
@@ -47,6 +56,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
     }
     
+    //Methods*******************************************************************
+    
     func setUpTextField(object: UITextField, bc: UIColor) {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         object.layer.cornerRadius = 5
@@ -64,8 +75,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     func login() {
-        activityIndicatorView.startAnimating()
-        activityIndicatorView.hidden = false
+        Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
         let email = emailTextField.text
         let password = passwordTextField.text
         FIRAuth.auth()?.signInWithEmail(email!, password: password!) { (user, error) in
@@ -73,17 +83,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 self.signedIn(user)
             } else {
                 print(error!.localizedDescription)
-                self.activityIndicatorView.hidden = true
-                self.activityIndicatorView.stopAnimating()
+                Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
                 self.presentViewController(self.loginError, animated: true, completion: nil)
                 return
             }
         }
-    }
-    
-    @IBAction func loginAsChurchMemberButtonPressed(sender: AnyObject) {
-        self.view.endEditing(true)
-        login()
     }
     
     func signedIn(user: FIRUser?) {
@@ -110,19 +114,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             let navController = self.storyboard?.instantiateViewControllerWithIdentifier("NavigationController") as! UINavigationController
             self.presentViewController(navController, animated: false, completion: nil)
             
-            self.activityIndicatorView.stopAnimating()
-            self.activityIndicatorView.hidden = true
-            
+            Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
             
             })
         
     }
-
-    @IBAction func createProfileButtonPressed(sender: AnyObject) {
-        let createProfileVC = self.storyboard?.instantiateViewControllerWithIdentifier("CreateProfileViewController") as! CreateProfileViewController
-        self.presentViewController(createProfileVC, animated: false, completion: nil)
-    }
     
+    //Text Field Functions*******************************************************
+
     func textFieldDidBeginEditing(textField: UITextField) {
         textField.becomeFirstResponder()
         if passwordTextField.editing {
@@ -148,7 +147,16 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return true
     }
 
+    //Actions*******************************************************************
     
+    @IBAction func loginAsChurchMemberButtonPressed(sender: AnyObject) {
+        self.view.endEditing(true)
+        login()
+    }
     
+    @IBAction func createProfileButtonPressed(sender: AnyObject) {
+        let createProfileVC = self.storyboard?.instantiateViewControllerWithIdentifier("CreateProfileViewController") as! CreateProfileViewController
+        self.presentViewController(createProfileVC, animated: false, completion: nil)
+    }
     
 }

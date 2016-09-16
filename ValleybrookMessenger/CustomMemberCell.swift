@@ -7,23 +7,23 @@
 //
 
 import UIKit
-import Firebase
 
 class CustomMemberCell: UITableViewCell {
     
-    let ref = FIRDatabase.database().reference()
+    //Outlets*******************************************************************
     
     @IBOutlet weak var myImageView: UIImageView!
-
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var emailLabel: UILabel!
     @IBOutlet weak var phoneLabel: UILabel!
+    
+    //Methods*******************************************************************
     
     func setCell(imageName: String, name: String, email: String, phone: String) {
         self.myImageView.image = UIImage(named: imageName)
         self.nameLabel.text = name
         self.emailLabel.text = email
-        self.phoneLabel.text = FirebaseClient.sharedInstance.formatPhoneNumber(phone)
+        self.phoneLabel.text = Methods.sharedInstance.formatPhoneNumber(phone)
         
     }
 }
