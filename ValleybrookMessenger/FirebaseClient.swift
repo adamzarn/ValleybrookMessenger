@@ -85,6 +85,7 @@ class FirebaseClient: NSObject {
         newPhoneRef.setValue(appDelegate.phone)
         let newNameRef = groupRef.child("Names").childByAutoId()
         newNameRef.setValue(appDelegate.name)
+        
     }
     
     func removeUserDataFromGroup(group: String, emailKey: String, phoneKey: String, nameKey: String) {

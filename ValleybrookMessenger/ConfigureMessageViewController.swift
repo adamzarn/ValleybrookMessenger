@@ -27,7 +27,7 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
     
     //Alerts********************************************************************
     
-    let dataErrorAlert:UIAlertController = UIAlertController(title: "Error", message: "Data could not be retrieved from the server. Try again later.",preferredStyle: UIAlertControllerStyle.Alert)
+    let dataErrorAlert:UIAlertController = UIAlertController(title: "Error", message: "Data could not be retrieved from the server to populate the recipients table. Try again later.",preferredStyle: UIAlertControllerStyle.Alert)
     let sendMailErrorAlert = UIAlertController(title: "Cannot Send Email", message: "Your device cannot send e-mail. Please check e-mail configuration and try again.", preferredStyle: UIAlertControllerStyle.Alert)
     let sendTextErrorAlert = UIAlertController(title: "Cannot Send Text", message: "Your device cannot send texts. Please check text configuration and try again.", preferredStyle: UIAlertControllerStyle.Alert)
     
@@ -331,10 +331,19 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
     }
     
     @IBAction func sendEmailButtonTapped(sender: AnyObject) {
-        let mailComposeViewController = configuredMailComposeViewController()
-        if MFMailComposeViewController.canSendMail() {
-            self.presentViewController(mailComposeViewController, animated: false, completion: nil)
+        
+        if Methods.sharedInstance.hasConnectivity() {
+        
+            let mailComposeViewController = configuredMailComposeViewController()
+            if MFMailComposeViewController.canSendMail() {
+                self.presentViewController(mailComposeViewController, animated: false, completion: nil)
+            } else {
+                self.presentViewController(sendMailErrorAlert, animated: false, completion: nil)
+            }
+            
         } else {
+            sendMailErrorAlert.title = "No Internet Connection."
+            sendMailErrorAlert.message = "You cannot send email without an internet connection."
             self.presentViewController(sendMailErrorAlert, animated: false, completion: nil)
         }
     }

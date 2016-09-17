@@ -23,6 +23,7 @@
 		DB7D3CE71D82E28700C3A3A4 /* CustomRecipientsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB7D3CE61D82E28600C3A3A4 /* CustomRecipientsCell.swift */; };
 		DB8EE8DA1D8C7CB9000B0828 /* Methods.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8EE8D91D8C7CB9000B0828 /* Methods.swift */; };
 		DB8EE8DC1D8CA864000B0828 /* README in Resources */ = {isa = PBXBuildFile; fileRef = DB8EE8DB1D8CA864000B0828 /* README */; };
+		DB8EE8DE1D8DD476000B0828 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8EE8DD1D8DD476000B0828 /* Reachability.swift */; };
 		DBCE97C91D7F10D300B93AED /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCE97C81D7F10D300B93AED /* AppDelegate.swift */; };
 		DBCE97CE1D7F10D300B93AED /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DBCE97CC1D7F10D300B93AED /* Main.storyboard */; };
 		DBCE97D11D7F10D300B93AED /* ValleybrookMessenger.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DBCE97CF1D7F10D300B93AED /* ValleybrookMessenger.xcdatamodeld */; };
@@ -77,6 +78,7 @@
 		DB7D3CE61D82E28600C3A3A4 /* CustomRecipientsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomRecipientsCell.swift; sourceTree = "<group>"; };
 		DB8EE8D91D8C7CB9000B0828 /* Methods.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Methods.swift; sourceTree = "<group>"; };
 		DB8EE8DB1D8CA864000B0828 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		DB8EE8DD1D8DD476000B0828 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		DBCE97C51D7F10D200B93AED /* ValleybrookMessenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ValleybrookMessenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBCE97C81D7F10D300B93AED /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DBCE97CD1D7F10D300B93AED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -247,6 +249,7 @@
 				DB4D5F741D809E690028E182 /* MyTextField.swift */,
 				DB4D5F781D80BB5B0028E182 /* GoogleService-Info.plist */,
 				DB8EE8D91D8C7CB9000B0828 /* Methods.swift */,
+				DB8EE8DD1D8DD476000B0828 /* Reachability.swift */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -527,6 +530,7 @@
 			files = (
 				DBCE98001D7F385F00B93AED /* SubscriptionsTableViewController.swift in Sources */,
 				DB7D3CE01D80FF5200C3A3A4 /* Constants.swift in Sources */,
+				DB8EE8DE1D8DD476000B0828 /* Reachability.swift in Sources */,
 				DB21941D1D832FFD00E5536D /* FirebaseClient.swift in Sources */,
 				DB7D3CE51D81BA4200C3A3A4 /* GroupsTableViewController.swift in Sources */,
 				DB4D5F751D809E690028E182 /* MyTextField.swift in Sources */,

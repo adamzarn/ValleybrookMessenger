@@ -42,6 +42,19 @@ class Methods: NSObject {
         }
     }
     
+    func hasConnectivity() -> Bool {
+        do {
+            let reachability: Reachability = try Reachability.reachabilityForInternetConnection()
+            let networkStatus: Int = reachability.currentReachabilityStatus.hashValue
+            
+            return (networkStatus != 0)
+        }
+        catch {
+            
+            return false
+        }
+    }
+    
     static let sharedInstance = Methods()
     private override init() {
         super.init()

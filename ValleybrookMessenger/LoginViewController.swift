@@ -22,13 +22,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var createProfileButton: UIButton!
     
     //Alerts********************************************************************
-    
-    let loginAsAdminError = UIAlertController(title: "Unauthorized.", message: "You are not an administrator.", preferredStyle: UIAlertControllerStyle.Alert)
-    let loginError = UIAlertController(title: "Bad Email or Password.", message: "Please try again or create an account.", preferredStyle: UIAlertControllerStyle.Alert)
-    
-    //Local Variables***********************************************************
-    
-    var loggingInAsAdmin = false
+
+    let loginError = UIAlertController(title: "", message: "", preferredStyle: UIAlertControllerStyle.Alert)
     
     //Life Cycle Functions*******************************************************
     
@@ -51,7 +46,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         createProfileButton.setTitleColor(appDelegate.darkValleybrookBlue, forState: .Normal)
         
-        loginAsAdminError.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
         loginError.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
         
     }
@@ -75,18 +69,29 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     func login() {
-        Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
-        let email = emailTextField.text
-        let password = passwordTextField.text
-        FIRAuth.auth()?.signInWithEmail(email!, password: password!) { (user, error) in
-            if let user = user {
-                self.signedIn(user)
-            } else {
-                print(error!.localizedDescription)
-                Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
-                self.presentViewController(self.loginError, animated: true, completion: nil)
-                return
+        
+        if Methods.sharedInstance.hasConnectivity() {
+        
+            Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
+            let email = emailTextField.text
+            let password = passwordTextField.text
+            FIRAuth.auth()?.signInWithEmail(email!, password: password!) { (user, error) in
+                if let user = user {
+                    self.signedIn(user)
+                } else {
+                    print(error!.localizedDescription)
+                    Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
+                    self.loginError.title = "Bad email or password."
+                    self.loginError.message = "Please try again."
+                    self.presentViewController(self.loginError, animated: true, completion: nil)
+                    return
+                }
             }
+            
+        } else {
+            self.loginError.title = "No Internet Connection."
+            self.loginError.message = "Please check your connection."
+            self.presentViewController(self.loginError, animated: true, completion: nil)
         }
     }
     

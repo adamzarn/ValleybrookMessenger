@@ -26,6 +26,7 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
     //Alerts********************************************************************
     
     let createProfileErrorAlert = UIAlertController(title: "Error", message: "Error", preferredStyle: UIAlertControllerStyle.Alert)
+    let dataErrorAlert:UIAlertController = UIAlertController(title: "Error", message: "Your profile could not be retrieved from the server. Try again later.",preferredStyle: UIAlertControllerStyle.Alert)
     
     //Local Variables***********************************************************
     
@@ -34,6 +35,8 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
     //Life Cycle Functions*******************************************************
 
     override func viewDidLoad() {
+        
+        dataErrorAlert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         
         let toolbarDone = UIToolbar.init()
         toolbarDone.sizeToFit()
@@ -97,7 +100,7 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
                     let phone = user["phone"] as! String
                     self.phoneTextField.text = Methods.sharedInstance.formatPhoneNumber(phone)
                 } else {
-                    print(error)
+                    self.presentViewController(self.dataErrorAlert, animated: true, completion: nil)
                 }
             }
         }
