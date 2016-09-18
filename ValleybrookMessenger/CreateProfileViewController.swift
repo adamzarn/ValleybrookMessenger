@@ -23,11 +23,6 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var navItem: UINavigationItem!
     @IBOutlet weak var cancelButton: UIBarButtonItem!
     
-    //Alerts********************************************************************
-    
-    let createProfileErrorAlert = UIAlertController(title: "Error", message: "Error", preferredStyle: UIAlertControllerStyle.Alert)
-    let dataErrorAlert:UIAlertController = UIAlertController(title: "Error", message: "Your profile could not be retrieved from the server. Try again later.",preferredStyle: UIAlertControllerStyle.Alert)
-    
     //Local Variables***********************************************************
     
     var comingFromLogin = true
@@ -35,8 +30,6 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
     //Life Cycle Functions*******************************************************
 
     override func viewDidLoad() {
-        
-        dataErrorAlert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         
         let toolbarDone = UIToolbar.init()
         toolbarDone.sizeToFit()
@@ -53,8 +46,6 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
         verifyPasswordTextField.inputAccessoryView = toolbarDone
         
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        
-        createProfileErrorAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
         
         nameTextField.delegate = self
         emailTextField.delegate = self
@@ -75,6 +66,7 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
         activityIndicatorView.hidden = true
         
         cancelButton.tintColor = appDelegate.darkValleybrookBlue
+    
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -92,16 +84,25 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
             verifyPasswordTextField!.enabled = false
             submitButton.setTitle("Submit Changes", forState: .Normal)
             
-            FirebaseClient.sharedInstance.getUserData { (users, error) -> () in
-                if let users = users {
-                    let user = users[appDelegate.uid!] as! NSDictionary
-                    self.nameTextField.text = user["name"] as? String
-                    self.emailTextField.text = user["email"] as? String
-                    let phone = user["phone"] as! String
-                    self.phoneTextField.text = Methods.sharedInstance.formatPhoneNumber(phone)
-                } else {
-                    self.presentViewController(self.dataErrorAlert, animated: true, completion: nil)
+            if Methods.sharedInstance.hasConnectivity() {
+                
+                FirebaseClient.sharedInstance.getUserData { (users, error) -> () in
+                    if let users = users {
+                        let user = users[appDelegate.uid!] as! NSDictionary
+                        self.nameTextField.text = user["name"] as? String
+                        self.emailTextField.text = user["email"] as? String
+                        let phone = user["phone"] as! String
+                        self.phoneTextField.text = Methods.sharedInstance.formatPhoneNumber(phone)
+                    } else {
+                        let dataErrorAlert:UIAlertController = UIAlertController(title: "Error", message: "Your profile could not be retrieved from the server. Try again later.",preferredStyle: UIAlertControllerStyle.Alert)
+                        dataErrorAlert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                        self.presentViewController(dataErrorAlert, animated: true, completion: nil)
+                    }
                 }
+            } else {
+                let networkConnectivityError = UIAlertController(title: "No Internet Connection", message: "Please check your connection.", preferredStyle: UIAlertControllerStyle.Alert)
+                networkConnectivityError.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+                self.presentViewController(networkConnectivityError, animated: false, completion: nil)
             }
         }
     }
@@ -120,8 +121,10 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
     }
     
     func endWithError(message: String) {
-        self.createProfileErrorAlert.message = message
-        self.presentViewController(self.createProfileErrorAlert, animated: true, completion: nil)
+        let createProfileErrorAlert = UIAlertController(title: "Error", message: "Error", preferredStyle: UIAlertControllerStyle.Alert)
+        createProfileErrorAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+        createProfileErrorAlert.message = message
+        self.presentViewController(createProfileErrorAlert, animated: true, completion: nil)
         Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
     }
     
@@ -231,56 +234,64 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func submitButtonPressed(sender: AnyObject) {
         
-        let unformattedPhone = Methods.sharedInstance.undoPhoneNumberFormat(phoneTextField.text!)
+        if Methods.sharedInstance.hasConnectivity() {
         
-        Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
-        
-        if comingFromLogin {
+            let unformattedPhone = Methods.sharedInstance.undoPhoneNumberFormat(phoneTextField.text!)
             
-            if passwordTextField.text != verifyPasswordTextField.text {
-                
-                self.endWithError("The second password does not match the first.")
-                
-            } else if unformattedPhone.characters.count != 10 {
-                
-                self.endWithError("Your phone number must be exactly 10 digits long.")
-                
-            } else if nameTextField.text! == "" {
-                
-                self.endWithError("You must provide a name.")
-                
-            } else {
-                
-                let email = emailTextField.text
-                let password = passwordTextField.text
-                FIRAuth.auth()?.createUserWithEmail(email!, password: password!) { (user, error) in
-                    if let error = error {
-                        print(error.localizedDescription)
-                        self.createProfileErrorAlert.message = error.localizedDescription
-                        self.presentViewController(self.createProfileErrorAlert, animated: true, completion: nil)
-                        Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
-                        return
-                    }
-                    self.setDisplayName(user!)
-                }
-            }
+            Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
             
-        } else {
-            
-            if unformattedPhone.characters.count == 10 && nameTextField.text! != "" {
+            if comingFromLogin {
                 
-                FirebaseClient.sharedInstance.updateUserInfo(nameTextField.text!, email: emailTextField.text!, phone: unformattedPhone)
-                
-                self.dismissViewControllerAnimated(true, completion: nil)
-                
-            } else {
-                if unformattedPhone.characters.count != 10 {
+                if passwordTextField.text != verifyPasswordTextField.text {
+                    
+                    self.endWithError("The second password does not match the first.")
+                    
+                } else if unformattedPhone.characters.count != 10 {
+                    
                     self.endWithError("Your phone number must be exactly 10 digits long.")
-                } else {
+                    
+                } else if nameTextField.text! == "" {
+                    
                     self.endWithError("You must provide a name.")
+                    
+                } else {
+                    
+                    let email = emailTextField.text
+                    let password = passwordTextField.text
+                    FIRAuth.auth()?.createUserWithEmail(email!, password: password!) { (user, error) in
+                        if let error = error {
+                            let createProfileErrorAlert = UIAlertController(title: "Error", message: "Error", preferredStyle: UIAlertControllerStyle.Alert)
+                            createProfileErrorAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+                            createProfileErrorAlert.message = error.localizedDescription
+                            self.presentViewController(createProfileErrorAlert, animated: true, completion: nil)
+                            Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
+                            return
+                        }
+                        self.setDisplayName(user!)
+                    }
                 }
+                
+            } else {
+                
+                if unformattedPhone.characters.count == 10 && nameTextField.text! != "" {
+                    
+                    FirebaseClient.sharedInstance.updateUserInfo(nameTextField.text!, email: emailTextField.text!, phone: unformattedPhone)
+                    
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                    
+                } else {
+                    if unformattedPhone.characters.count != 10 {
+                        self.endWithError("Your phone number must be exactly 10 digits long.")
+                    } else {
+                        self.endWithError("You must provide a name.")
+                    }
+                }
+                
             }
-            
+        } else {
+            let networkConnectivityError = UIAlertController(title: "No Internet Connection", message: "Please check your connection.", preferredStyle: UIAlertControllerStyle.Alert)
+            networkConnectivityError.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(networkConnectivityError, animated: false, completion: nil)
         }
         
     }

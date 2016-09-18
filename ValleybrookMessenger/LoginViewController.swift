@@ -21,10 +21,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet weak var createProfileButton: UIButton!
     
-    //Alerts********************************************************************
-
-    let loginError = UIAlertController(title: "", message: "", preferredStyle: UIAlertControllerStyle.Alert)
-    
     //Life Cycle Functions*******************************************************
     
     override func viewDidLoad() {
@@ -46,7 +42,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         createProfileButton.setTitleColor(appDelegate.darkValleybrookBlue, forState: .Normal)
         
-        loginError.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+        
         
     }
     
@@ -81,17 +77,20 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 } else {
                     print(error!.localizedDescription)
                     Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
-                    self.loginError.title = "Bad email or password."
-                    self.loginError.message = "Please try again."
-                    self.presentViewController(self.loginError, animated: true, completion: nil)
+                    
+                    let loginError = UIAlertController(title: "Bad email or password.", message: "Please try again.", preferredStyle: UIAlertControllerStyle.Alert)
+                    loginError.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+                    self.presentViewController(loginError, animated: true, completion: nil)
                     return
                 }
             }
             
         } else {
-            self.loginError.title = "No Internet Connection."
-            self.loginError.message = "Please check your connection."
-            self.presentViewController(self.loginError, animated: true, completion: nil)
+            
+            let networkConnectivityError = UIAlertController(title: "No Internet Connection", message: "Please check your connection.", preferredStyle: UIAlertControllerStyle.Alert)
+            networkConnectivityError.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(networkConnectivityError, animated: true, completion: nil)
+            
         }
     }
     

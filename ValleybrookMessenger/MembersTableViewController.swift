@@ -16,10 +16,6 @@ class MembersTableViewController: UIViewController {
     @IBOutlet weak var myTableView: UITableView!
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     
-    //Alerts********************************************************************
-    
-    let dataErrorAlert:UIAlertController = UIAlertController(title: "Error", message: "Data could not be retrieved from the server. Try again later.",preferredStyle: UIAlertControllerStyle.Alert)
-    
     //Local Variables***********************************************************
     
     var group: String = ""
@@ -32,7 +28,6 @@ class MembersTableViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        dataErrorAlert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         myTableView.hidden = true
         Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
         navItem.title = group
@@ -43,10 +38,18 @@ class MembersTableViewController: UIViewController {
         myTableView.hidden = true
         Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
         
-        if group == "All Users" {
-            getAllUsers()
+        if Methods.sharedInstance.hasConnectivity() {
+        
+            if group == "All Users" {
+                getAllUsers()
+            } else {
+                getMembersForGroup()
+            }
+            
         } else {
-            getMembersForGroup()
+            let networkConnectivityError = UIAlertController(title: "No Internet Connection", message: "Please check your connection.", preferredStyle: UIAlertControllerStyle.Alert)
+            networkConnectivityError.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(networkConnectivityError, animated: false, completion: nil)
         }
         
     }
@@ -68,7 +71,9 @@ class MembersTableViewController: UIViewController {
                     self.groupNames.append(users[key]!["name"] as! String)
                 }
             } else {
-                self.presentViewController(self.dataErrorAlert, animated: true, completion: nil)
+                let dataErrorAlert:UIAlertController = UIAlertController(title: "Error", message: "Data could not be retrieved from the server. Try again later.",preferredStyle: UIAlertControllerStyle.Alert)
+                dataErrorAlert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                self.presentViewController(dataErrorAlert, animated: true, completion: nil)
             }
             Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
             self.myTableView.hidden = false
@@ -105,7 +110,9 @@ class MembersTableViewController: UIViewController {
                     }
                 }
             } else {
-                self.presentViewController(self.dataErrorAlert, animated: true, completion: nil)
+                let dataErrorAlert:UIAlertController = UIAlertController(title: "Error", message: "Data could not be retrieved from the server. Try again later.",preferredStyle: UIAlertControllerStyle.Alert)
+                dataErrorAlert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                self.presentViewController(dataErrorAlert, animated: true, completion: nil)
             }
             Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
             self.myTableView.hidden = false

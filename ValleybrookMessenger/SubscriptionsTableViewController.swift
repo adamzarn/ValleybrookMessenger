@@ -19,10 +19,6 @@ class SubscriptionsTableViewController: UIViewController {
     @IBOutlet weak var myTableView: UITableView!
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     
-    //Alerts********************************************************************
-    
-    let dataErrorAlert:UIAlertController = UIAlertController(title: "Error", message: "Data could not be retrieved from the server. Try again later.",preferredStyle: UIAlertControllerStyle.Alert)
-    
     //Local Variables***********************************************************
     
     var groupsDict: [String:Bool] = [:]
@@ -33,8 +29,6 @@ class SubscriptionsTableViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        dataErrorAlert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         
         myTableView.hidden = true
         Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
@@ -59,7 +53,14 @@ class SubscriptionsTableViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         myTableView.hidden = true
         Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
-        updateGroups()
+        
+        if Methods.sharedInstance.hasConnectivity() {
+            updateGroups()
+        } else {
+            let networkConnectivityError = UIAlertController(title: "No Internet Connection", message: "Please check your connection.", preferredStyle: UIAlertControllerStyle.Alert)
+            networkConnectivityError.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(networkConnectivityError, animated: false, completion: nil)
+        }
     }
     
     //Methods*******************************************************************
@@ -83,7 +84,9 @@ class SubscriptionsTableViewController: UIViewController {
                     }
                 }
             } else {
-                self.presentViewController(self.dataErrorAlert, animated: true, completion: nil)
+                let dataErrorAlert:UIAlertController = UIAlertController(title: "Error", message: "Data could not be retrieved from the server. Try again later.",preferredStyle: UIAlertControllerStyle.Alert)
+                dataErrorAlert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                self.presentViewController(dataErrorAlert, animated: true, completion: nil)
             }
             
             Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
@@ -97,6 +100,7 @@ class SubscriptionsTableViewController: UIViewController {
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! CustomSubscriptionCell
+        cell.delegate = self
         
         groupKeys = []
         subscribedToGroup = []

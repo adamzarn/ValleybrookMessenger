@@ -17,7 +17,7 @@ class CustomSubscriptionCell: UITableViewCell {
     
     //Local Variables***********************************************************
     
-    var switchFlippedOn = false
+    var delegate: UIViewController?
     
     //Methods*******************************************************************
     
@@ -30,51 +30,61 @@ class CustomSubscriptionCell: UITableViewCell {
     
     @IBAction func switchFlipped(sender: AnyObject) {
         
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        let group = self.groupLabel.text!
+        if Methods.sharedInstance.hasConnectivity() {
+        
+            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            let group = self.groupLabel.text!
 
-        if subscribed.on {
-            
-            self.switchFlippedOn = true
-            
-            FirebaseClient.sharedInstance.addUserDataToGroup(group)
+            if subscribed.on {
+                
+                FirebaseClient.sharedInstance.addUserDataToGroup(group)
+                
+            } else {
+
+                var addGroupBack = false
+                
+                FirebaseClient.sharedInstance.getGroupData { (groups, error) -> () in
+                    if let groups = groups {
+                        
+                        let groupLeft = groups[group] as! NSDictionary
+                        
+                        let emails = groupLeft["Emails"] as! NSDictionary
+                        let phones = groupLeft["Phones"] as! NSDictionary
+                        let names = groupLeft["Names"] as! NSDictionary
+                        
+                        if emails.count == 1 {
+                            addGroupBack = true
+                        }
+                    
+                        let emailKeys = emails.allKeysForObject(appDelegate.email!) as! [String]
+                        let phoneKeys = phones.allKeysForObject(appDelegate.phone!) as! [String]
+                        let nameKeys = names.allKeysForObject(appDelegate.name!) as! [String]
+                    
+                        if emailKeys.count > 0 {
+                            let emailKey = emailKeys[0]
+                            let phoneKey = phoneKeys[0]
+                            let nameKey = nameKeys[0]
+                            FirebaseClient.sharedInstance.removeUserDataFromGroup(group, emailKey: emailKey, phoneKey: phoneKey, nameKey: nameKey)
+                        }
+                        
+                        if addGroupBack {
+                            FirebaseClient.sharedInstance.addGroup(group)
+                        }
+                    }
+                }
+            }
             
         } else {
             
-            self.switchFlippedOn = false
-            var addGroupBack = false
-            
-            FirebaseClient.sharedInstance.getGroupData { (groups, error) -> () in
-                if let groups = groups {
-                    
-                    let groupLeft = groups[group] as! NSDictionary
-                    
-                    let emails = groupLeft["Emails"] as! NSDictionary
-                    let phones = groupLeft["Phones"] as! NSDictionary
-                    let names = groupLeft["Names"] as! NSDictionary
-                    
-                    if emails.count == 1 {
-                        addGroupBack = true
-                    }
-                
-                    let emailKeys = emails.allKeysForObject(appDelegate.email!) as! [String]
-                    let phoneKeys = phones.allKeysForObject(appDelegate.phone!) as! [String]
-                    let nameKeys = names.allKeysForObject(appDelegate.name!) as! [String]
-                
-                    if emailKeys.count > 0 {
-                        let emailKey = emailKeys[0]
-                        let phoneKey = phoneKeys[0]
-                        let nameKey = nameKeys[0]
-                        FirebaseClient.sharedInstance.removeUserDataFromGroup(group, emailKey: emailKey, phoneKey: phoneKey, nameKey: nameKey)
-                    }
-                    
-                    if addGroupBack {
-                        FirebaseClient.sharedInstance.addGroup(group)
-                    }
+            self.subscribed.on = !self.subscribed.on
+    
+            let networkConnectivityError = UIAlertController(title: "No Internet Connection", message: "Please check your connection.", preferredStyle: UIAlertControllerStyle.Alert)
+            networkConnectivityError.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
 
-                }
-            }
+            let subscriptionsVC = self.delegate as! SubscriptionsTableViewController
+            subscriptionsVC.presentViewController(networkConnectivityError, animated: false,completion: nil)
+            subscriptionsVC.view.sendSubviewToBack(subscriptionsVC.view)
+            
         }
     }
-    
 }

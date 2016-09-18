@@ -25,12 +25,6 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
     @IBOutlet weak var recipientsLabel: UILabel!
     @IBOutlet weak var messageLabel: UILabel!
     
-    //Alerts********************************************************************
-    
-    let dataErrorAlert:UIAlertController = UIAlertController(title: "Error", message: "Data could not be retrieved from the server to populate the recipients table. Try again later.",preferredStyle: UIAlertControllerStyle.Alert)
-    let sendMailErrorAlert = UIAlertController(title: "Cannot Send Email", message: "Your device cannot send e-mail. Please check e-mail configuration and try again.", preferredStyle: UIAlertControllerStyle.Alert)
-    let sendTextErrorAlert = UIAlertController(title: "Cannot Send Text", message: "Your device cannot send texts. Please check text configuration and try again.", preferredStyle: UIAlertControllerStyle.Alert)
-    
     //Local Variables***********************************************************
     
     var emailRecipients: [String] = []
@@ -44,7 +38,6 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        dataErrorAlert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         myTableView.hidden = true
         Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
         
@@ -53,9 +46,6 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
         myTableView.allowsSelection = false
         
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        
-        sendMailErrorAlert.addAction(UIAlertAction(title:"OK", style: UIAlertActionStyle.Default, handler: nil))
-        sendTextErrorAlert.addAction(UIAlertAction(title:"OK", style: UIAlertActionStyle.Default, handler: nil))
         
         subjectTextField.delegate = self
         messageTextView.delegate = self
@@ -96,8 +86,18 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
         super.viewWillAppear(animated)
         myTableView.hidden = true
         Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
-        getUserCount()
-        updateGroups()
+        
+        if Methods.sharedInstance.hasConnectivity() {
+            getUserCount()
+            updateGroups()
+        } else {
+            self.subjectTextField.text = ""
+            self.messageTextView.text = ""
+            let networkConnectivityError = UIAlertController(title: "No Internet Connection", message: "Please check your connection.", preferredStyle: UIAlertControllerStyle.Alert)
+            networkConnectivityError.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(networkConnectivityError, animated: false, completion: nil)
+        }
+        
         subscribeToKeyboardNotifications()
         
     }
@@ -115,7 +115,9 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
             if let users = users {
                 self.groupsDict["All Users"] = users.count
             } else {
-                self.presentViewController(self.dataErrorAlert, animated: true, completion: nil)
+                let dataErrorAlert:UIAlertController = UIAlertController(title: "Error", message: "Data could not be retrieved from the server to populate the recipients table. Try again later.",preferredStyle: UIAlertControllerStyle.Alert)
+                dataErrorAlert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                self.presentViewController(dataErrorAlert, animated: true, completion: nil)
             }
         }
     }
@@ -133,7 +135,9 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
                     }
                 }
             } else {
-                self.presentViewController(self.dataErrorAlert, animated: true, completion: nil)
+                let dataErrorAlert:UIAlertController = UIAlertController(title: "Error", message: "Data could not be retrieved from the server to populate the recipients table. Try again later.",preferredStyle: UIAlertControllerStyle.Alert)
+                dataErrorAlert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                self.presentViewController(dataErrorAlert, animated: true, completion: nil)
             }
             Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
             self.myTableView.hidden = false
@@ -272,6 +276,7 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell") as! CustomRecipientsCell
+        cell.delegate = self
         
         cell.group.textColor = UIColor.blackColor()
         cell.members.textColor = UIColor.blackColor()
@@ -338,13 +343,17 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
             if MFMailComposeViewController.canSendMail() {
                 self.presentViewController(mailComposeViewController, animated: false, completion: nil)
             } else {
+                let sendMailErrorAlert = UIAlertController(title: "Cannot Send Mail", message: "Your device cannot send email. Please check text configuration and try again.", preferredStyle: UIAlertControllerStyle.Alert)
+                sendMailErrorAlert.addAction(UIAlertAction(title:"OK", style: UIAlertActionStyle.Default, handler: nil))
                 self.presentViewController(sendMailErrorAlert, animated: false, completion: nil)
             }
             
         } else {
-            sendMailErrorAlert.title = "No Internet Connection."
-            sendMailErrorAlert.message = "You cannot send email without an internet connection."
-            self.presentViewController(sendMailErrorAlert, animated: false, completion: nil)
+            self.subjectTextField.text = ""
+            self.messageTextView.text = ""
+            let networkConnectivityError = UIAlertController(title: "No Internet Connection", message: "Please check your connection.", preferredStyle: UIAlertControllerStyle.Alert)
+            networkConnectivityError.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(networkConnectivityError, animated: false, completion: nil)
         }
     }
     
@@ -352,13 +361,17 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
         
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         if appDelegate.textRecipients.count > 10 {
+            let sendTextErrorAlert = UIAlertController(title: "Cannot Send Text", message: "Your device cannot send texts. Please check text configuration and try again.", preferredStyle: UIAlertControllerStyle.Alert)
             sendTextErrorAlert.message = "You cannot send texts to more than 10 people at once."
+            sendTextErrorAlert.addAction(UIAlertAction(title:"OK", style: UIAlertActionStyle.Default, handler: nil))
             self.presentViewController(sendTextErrorAlert,animated:true,completion: nil)
         } else {
             let textMessageViewController = configuredMessageComposeViewController()
             if MFMessageComposeViewController.canSendText() {
                 self.presentViewController(textMessageViewController, animated: false, completion: nil)
             } else {
+                let sendTextErrorAlert = UIAlertController(title: "Cannot Send Text", message: "Your device cannot send texts. Please check text configuration and try again.", preferredStyle: UIAlertControllerStyle.Alert)
+                sendTextErrorAlert.addAction(UIAlertAction(title:"OK", style: UIAlertActionStyle.Default, handler: nil))
                 self.presentViewController(sendTextErrorAlert, animated: false, completion: nil)
             }
         }

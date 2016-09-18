@@ -76,28 +76,36 @@ class FirebaseClient: NSObject {
     
     func addUserDataToGroup(group: String) {
         
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        let groupRef = self.ref.child("Groups").child(group)
+        if Methods.sharedInstance.hasConnectivity() {
         
-        let newEmailRef = groupRef.child("Emails").childByAutoId()
-        newEmailRef.setValue(appDelegate.email)
-        let newPhoneRef = groupRef.child("Phones").childByAutoId()
-        newPhoneRef.setValue(appDelegate.phone)
-        let newNameRef = groupRef.child("Names").childByAutoId()
-        newNameRef.setValue(appDelegate.name)
+            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            let groupRef = self.ref.child("Groups").child(group)
+            
+            let newEmailRef = groupRef.child("Emails").childByAutoId()
+            newEmailRef.setValue(appDelegate.email)
+            let newPhoneRef = groupRef.child("Phones").childByAutoId()
+            newPhoneRef.setValue(appDelegate.phone)
+            let newNameRef = groupRef.child("Names").childByAutoId()
+            newNameRef.setValue(appDelegate.name)
+            
+        }
         
     }
     
     func removeUserDataFromGroup(group: String, emailKey: String, phoneKey: String, nameKey: String) {
         
-        let groupRef = self.ref.child("Groups").child(group)
+        if Methods.sharedInstance.hasConnectivity() {
+        
+            let groupRef = self.ref.child("Groups").child(group)
 
-        let emailToDeleteRef = groupRef.child("Emails").child(emailKey)
-        emailToDeleteRef.removeValue()
-        let phoneToDeleteRef = groupRef.child("Phones").child(phoneKey)
-        phoneToDeleteRef.removeValue()
-        let nameToDeleteRef = groupRef.child("Names").child(nameKey)
-        nameToDeleteRef.removeValue()
+            let emailToDeleteRef = groupRef.child("Emails").child(emailKey)
+            emailToDeleteRef.removeValue()
+            let phoneToDeleteRef = groupRef.child("Phones").child(phoneKey)
+            phoneToDeleteRef.removeValue()
+            let nameToDeleteRef = groupRef.child("Names").child(nameKey)
+            nameToDeleteRef.removeValue()
+            
+        }
 
     }
 

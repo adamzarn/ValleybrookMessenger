@@ -20,7 +20,6 @@ class GroupsTableViewController: UIViewController, UITableViewDelegate {
     //Alerts********************************************************************
     
     let alert = UIAlertController(title: "Add New Group", message: "", preferredStyle: UIAlertControllerStyle.Alert)
-    let dataErrorAlert:UIAlertController = UIAlertController(title: "Error", message: "Data could not be retrieved from the server. Try again later.",preferredStyle: UIAlertControllerStyle.Alert)
     
     //Local Variables***********************************************************
     
@@ -33,7 +32,6 @@ class GroupsTableViewController: UIViewController, UITableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        dataErrorAlert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         self.navigationController!.navigationBar.translucent = false
         
         myTableView.hidden = true
@@ -65,8 +63,15 @@ class GroupsTableViewController: UIViewController, UITableViewDelegate {
     override func viewWillAppear(animated: Bool) {
         myTableView.hidden = true
         Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
-        getUserCount()
-        updateGroups()
+        
+        if Methods.sharedInstance.hasConnectivity() {
+            getUserCount()
+            updateGroups()
+        } else {
+            let networkConnectivityError = UIAlertController(title: "No Internet Connection", message: "Please check your connection.", preferredStyle: UIAlertControllerStyle.Alert)
+            networkConnectivityError.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(networkConnectivityError, animated: false, completion: nil)
+        }
     }
     
     //Methods*******************************************************************
@@ -76,7 +81,10 @@ class GroupsTableViewController: UIViewController, UITableViewDelegate {
             if let users = users {
                 self.groupsDict["All Users"] = users.count
             } else {
-                self.presentViewController(self.dataErrorAlert, animated: true, completion: nil)
+                let dataErrorAlert:UIAlertController = UIAlertController(title: "Error", message: "Data could not be retrieved from the server. Try again later.",preferredStyle: UIAlertControllerStyle.Alert)
+                dataErrorAlert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+
+                self.presentViewController(dataErrorAlert, animated: true, completion: nil)
             }
         }
     }
@@ -94,7 +102,9 @@ class GroupsTableViewController: UIViewController, UITableViewDelegate {
                     }
                 }
             } else {
-                self.presentViewController(self.dataErrorAlert, animated: true, completion: nil)
+                let dataErrorAlert:UIAlertController = UIAlertController(title: "Error", message: "Data could not be retrieved from the server. Try again later.",preferredStyle: UIAlertControllerStyle.Alert)
+                dataErrorAlert.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                self.presentViewController(dataErrorAlert, animated: true, completion: nil)
             }
             Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
             self.myTableView.hidden = false
@@ -202,6 +212,8 @@ class GroupsTableViewController: UIViewController, UITableViewDelegate {
     }
     
     @IBAction func addGroupButtonPressed(sender: AnyObject) {
+        
+        
         self.presentViewController(alert, animated: true, completion: nil)
     }
 
