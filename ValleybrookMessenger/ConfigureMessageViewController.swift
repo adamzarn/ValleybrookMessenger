@@ -32,6 +32,8 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
     var groupsDict: [String:Int] = [:]
     var groupKeys: [String] = []
     var groupCounts: [Int] = []
+    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    var onMessageView = false
     
     //Life Cycle Functions*******************************************************
 
@@ -45,8 +47,6 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
         
         myTableView.allowsSelection = false
         
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        
         subjectTextField.delegate = self
         messageTextView.delegate = self
         
@@ -55,19 +55,12 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
         self.view.addGestureRecognizer(tapRecognizer)
         
         let recipientsView = UIView(frame: getLabelRect(recipientsLabel))
-        self.view.addSubview(recipientsView)
-        recipientsView.backgroundColor = appDelegate.darkValleybrookBlue
         let subjectView = UIView(frame: getLabelRect(subjectLabel))
-        self.view.addSubview(subjectView)
-        subjectView.backgroundColor = appDelegate.darkValleybrookBlue
         let messageView = UIView(frame: getLabelRect(messageLabel))
-        self.view.addSubview(messageView)
-        messageView.backgroundColor = appDelegate.darkValleybrookBlue
-        print(recipientsView.frame.origin.y, subjectView.frame.origin.y, messageView.frame.origin.y)
         
-        recipientsLabel.layer.zPosition = 1
-        subjectLabel.layer.zPosition = 1
-        messageLabel.layer.zPosition = 1
+        setUpView(recipientsView, label: recipientsLabel)
+        setUpView(subjectView, label: subjectLabel)
+        setUpView(messageView, label: messageLabel)
         
         subjectTextField.autocorrectionType = .No
         messageTextView.autocorrectionType = .No
@@ -84,6 +77,7 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        onMessageView = true
         myTableView.hidden = true
         Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
         
@@ -104,11 +98,17 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        
+        onMessageView = false
         unsubscribeFromKeyboardNotifications()
     }
     
     //Methods*******************************************************************
+    
+    func setUpView(subview: UIView, label: UILabel) {
+        self.view.addSubview(subview)
+        subview.backgroundColor = appDelegate.darkValleybrookBlue
+        label.layer.zPosition = 1
+    }
     
     func getUserCount() {
         FirebaseClient.sharedInstance.getUserData { (users, error) -> () in
@@ -157,8 +157,6 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
     
     func configuredMessageComposeViewController() -> MFMessageComposeViewController {
         
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        
         let textMessageVC = MFMessageComposeViewController()
         textMessageVC.messageComposeDelegate = self
         
@@ -170,8 +168,6 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
     }
     
     func configuredMailComposeViewController() -> MFMailComposeViewController {
-        
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
         let mailComposerVC = MFMailComposeViewController()
         mailComposerVC.mailComposeDelegate = self
@@ -208,9 +204,10 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
     
     func keyboardWillHide(notification: NSNotification) {
         
-        let navBarHeight = self.navigationController!.navigationBar.frame.height + UIApplication.sharedApplication().statusBarFrame.size.height
-        
-        view.frame.origin.y = navBarHeight
+        if onMessageView {
+            let navBarHeight = self.navigationController!.navigationBar.frame.height + UIApplication.sharedApplication().statusBarFrame.size.height
+            view.frame.origin.y = navBarHeight
+        }
     }
     
     func getKeyboardHeight(notification: NSNotification) -> CGFloat {
@@ -358,8 +355,7 @@ class ConfigureMessageViewController: UIViewController, MFMailComposeViewControl
     }
     
     @IBAction func sendTextButtonTapped(sender: AnyObject) {
-        
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+
         if appDelegate.textRecipients.count > 10 {
             let sendTextErrorAlert = UIAlertController(title: "Cannot Send Text", message: "Your device cannot send texts. Please check text configuration and try again.", preferredStyle: UIAlertControllerStyle.Alert)
             sendTextErrorAlert.message = "You cannot send texts to more than 10 people at once."

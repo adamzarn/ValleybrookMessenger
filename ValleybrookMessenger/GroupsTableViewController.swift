@@ -26,6 +26,7 @@ class GroupsTableViewController: UIViewController, UITableViewDelegate {
     var groupsDict: [String:Int] = [:]
     var groupKeys: [String] = []
     var groupCounts: [Int] = []
+    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     
     //Life Cycle Functions*******************************************************
     
@@ -51,8 +52,6 @@ class GroupsTableViewController: UIViewController, UITableViewDelegate {
         }))
         
         self.alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default, handler: nil))
-        
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
         addGroupButton.tintColor = appDelegate.darkValleybrookBlue
         self.navigationController?.navigationBar.tintColor = appDelegate.darkValleybrookBlue

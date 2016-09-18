@@ -21,11 +21,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet weak var createProfileButton: UIButton!
     
+    //Local Variables***********************************************************
+    
+    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    
     //Life Cycle Functions*******************************************************
     
     override func viewDidLoad() {
-        
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
         loginAsChurchMemberButton.setTitleColor(appDelegate.darkValleybrookBlue, forState: .Normal)
         
@@ -42,14 +44,11 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         createProfileButton.setTitleColor(appDelegate.darkValleybrookBlue, forState: .Normal)
         
-        
-        
     }
     
     //Methods*******************************************************************
     
     func setUpTextField(object: UITextField, bc: UIColor) {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         object.layer.cornerRadius = 5
         object.layer.borderColor = appDelegate.lightValleybrookBlue.CGColor
         object.layer.borderWidth = 2
@@ -57,7 +56,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     func setUpButton(object: UIButton, bc: UIColor) {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         object.layer.cornerRadius = 5
         object.layer.borderColor = appDelegate.lightValleybrookBlue.CGColor
         object.layer.borderWidth = 2
@@ -96,8 +94,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     func signedIn(user: FIRUser?) {
         
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        
         appDelegate.uid = user!.uid
         appDelegate.email = user!.email
         
@@ -105,9 +101,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         userRef.observeSingleEventOfType(.Value, withBlock: { snapshot in
             let theUser = snapshot.value!
-            appDelegate.phone = theUser["phone"] as? String
-            appDelegate.name = theUser["name"] as? String
-            appDelegate.admin = theUser["admin"] as! Bool
+            self.appDelegate.phone = theUser["phone"] as? String
+            self.appDelegate.name = theUser["name"] as? String
+            self.appDelegate.admin = theUser["admin"] as! Bool
             
             MeasurementHelper.sendLoginEvent()
             AppState.sharedInstance.displayName = user?.displayName ?? user?.email

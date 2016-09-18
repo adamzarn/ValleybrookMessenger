@@ -19,6 +19,7 @@ class CustomRecipientsCell: UITableViewCell {
     //Local Variables***********************************************************
     
     var delegate: UIViewController?
+    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     
     //Methods*******************************************************************
     
@@ -32,8 +33,7 @@ class CustomRecipientsCell: UITableViewCell {
     @IBAction func switchFlipped(sender: AnyObject) {
         
         if Methods.sharedInstance.hasConnectivity() {
-        
-            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+
             let group = self.group.text!
             
             if group == "All Users" {
@@ -46,8 +46,8 @@ class CustomRecipientsCell: UITableViewCell {
                             
                             for key in allUserKeys {
                                 let user = users[key] as! NSDictionary
-                                appDelegate.emailRecipients.append(user["email"] as! String)
-                                appDelegate.emailRecipients.append(user["phone"] as! String)
+                                self.appDelegate.emailRecipients.append(user["email"] as! String)
+                                self.appDelegate.emailRecipients.append(user["phone"] as! String)
                             }
                             
                         } else {
@@ -58,13 +58,13 @@ class CustomRecipientsCell: UITableViewCell {
                                 let user = users[key] as! NSDictionary
                                 let email = user["email"] as! String
                                 let phone = user["phone"] as! String
-                                appDelegate.emailRecipients = appDelegate.emailRecipients.filter{ $0 != email }
-                                appDelegate.textRecipients = appDelegate.textRecipients.filter{ $0 != phone }
+                                self.appDelegate.emailRecipients = self.appDelegate.emailRecipients.filter{ $0 != email }
+                                self.appDelegate.textRecipients = self.appDelegate.textRecipients.filter{ $0 != phone }
                             }
                         }
                         
-                        appDelegate.emailRecipients = Array(Set(appDelegate.emailRecipients))
-                        appDelegate.textRecipients = Array(Set(appDelegate.textRecipients))
+                        self.appDelegate.emailRecipients = Array(Set(self.appDelegate.emailRecipients))
+                        self.appDelegate.textRecipients = Array(Set(self.appDelegate.textRecipients))
 
                     }
                 }
@@ -84,26 +84,26 @@ class CustomRecipientsCell: UITableViewCell {
                         if self.subscribed.on {
                         
                             for email in newEmails! {
-                                appDelegate.emailRecipients.append(email)
+                                self.appDelegate.emailRecipients.append(email)
                             }
                         
                             for phone in newPhones! {
-                                appDelegate.textRecipients.append(phone)
+                                self.appDelegate.textRecipients.append(phone)
                             }
                             
                         } else {
                             
                             for email in newEmails! {
-                                appDelegate.emailRecipients = appDelegate.emailRecipients.filter{ $0 != email }
+                                self.appDelegate.emailRecipients = self.appDelegate.emailRecipients.filter{ $0 != email }
                             }
                                 
                             for phone in newPhones! {
-                                appDelegate.textRecipients = appDelegate.textRecipients.filter{ $0 != phone }
+                                self.appDelegate.textRecipients = self.appDelegate.textRecipients.filter{ $0 != phone }
                             }
                         }
                         
-                        appDelegate.emailRecipients = Array(Set(appDelegate.emailRecipients))
-                        appDelegate.textRecipients = Array(Set(appDelegate.textRecipients))
+                        self.appDelegate.emailRecipients = Array(Set(self.appDelegate.emailRecipients))
+                        self.appDelegate.textRecipients = Array(Set(self.appDelegate.textRecipients))
                     }
                 }
             }

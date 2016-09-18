@@ -24,6 +24,7 @@ class SubscriptionsTableViewController: UIViewController {
     var groupsDict: [String:Bool] = [:]
     var groupKeys: [String] = []
     var subscribedToGroup: [Bool] = []
+    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     
     //Life Cycle Functions*******************************************************
     
@@ -34,8 +35,7 @@ class SubscriptionsTableViewController: UIViewController {
         Methods.sharedInstance.toggleActivityIndicator(self.activityIndicatorView)
         
         myTableView.allowsSelection = false
-        
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    
         barButton.title = "Logged in as \(appDelegate.email!)"
         barButton.enabled = false
         barButton.tintColor = appDelegate.darkValleybrookBlue
@@ -75,8 +75,7 @@ class SubscriptionsTableViewController: UIViewController {
                         self.groupsDict[key] = false
                     } else {
                         let emails = group.value["Emails"]!!.allValues as! [String]
-                        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-                        if emails.contains(appDelegate.email!) {
+                        if emails.contains(self.appDelegate.email!) {
                             self.groupsDict[key] = true
                         } else {
                             self.groupsDict[key] = false

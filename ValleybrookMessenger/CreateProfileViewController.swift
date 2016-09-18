@@ -26,6 +26,7 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
     //Local Variables***********************************************************
     
     var comingFromLogin = true
+    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     
     //Life Cycle Functions*******************************************************
 
@@ -44,8 +45,6 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
         phoneTextField.inputAccessoryView = toolbarDone
         passwordTextField.inputAccessoryView = toolbarDone
         verifyPasswordTextField.inputAccessoryView = toolbarDone
-        
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
         nameTextField.delegate = self
         emailTextField.delegate = self
@@ -71,8 +70,6 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
     
     override func viewWillAppear(animated: Bool) {
         
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        
         if comingFromLogin {
             emailTextField.enabled = true
         } else {
@@ -88,7 +85,7 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
                 
                 FirebaseClient.sharedInstance.getUserData { (users, error) -> () in
                     if let users = users {
-                        let user = users[appDelegate.uid!] as! NSDictionary
+                        let user = users[self.appDelegate.uid!] as! NSDictionary
                         self.nameTextField.text = user["name"] as? String
                         self.emailTextField.text = user["email"] as? String
                         let phone = user["phone"] as! String
@@ -114,7 +111,6 @@ class CreateProfileViewController: UIViewController, UITextFieldDelegate {
     }
     
     func setUp(object: AnyObject?) {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         object!.layer.cornerRadius = 5
         object!.layer.borderColor = appDelegate.lightValleybrookBlue.CGColor
         object!.layer.borderWidth = 1

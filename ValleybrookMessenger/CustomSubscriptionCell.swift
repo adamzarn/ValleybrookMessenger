@@ -18,6 +18,7 @@ class CustomSubscriptionCell: UITableViewCell {
     //Local Variables***********************************************************
     
     var delegate: UIViewController?
+    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     
     //Methods*******************************************************************
     
@@ -31,8 +32,7 @@ class CustomSubscriptionCell: UITableViewCell {
     @IBAction func switchFlipped(sender: AnyObject) {
         
         if Methods.sharedInstance.hasConnectivity() {
-        
-            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    
             let group = self.groupLabel.text!
 
             if subscribed.on {
@@ -56,9 +56,9 @@ class CustomSubscriptionCell: UITableViewCell {
                             addGroupBack = true
                         }
                     
-                        let emailKeys = emails.allKeysForObject(appDelegate.email!) as! [String]
-                        let phoneKeys = phones.allKeysForObject(appDelegate.phone!) as! [String]
-                        let nameKeys = names.allKeysForObject(appDelegate.name!) as! [String]
+                        let emailKeys = emails.allKeysForObject(self.appDelegate.email!) as! [String]
+                        let phoneKeys = phones.allKeysForObject(self.appDelegate.phone!) as! [String]
+                        let nameKeys = names.allKeysForObject(self.appDelegate.name!) as! [String]
                     
                         if emailKeys.count > 0 {
                             let emailKey = emailKeys[0]

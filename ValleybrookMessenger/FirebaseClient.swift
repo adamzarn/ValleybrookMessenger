@@ -12,6 +12,7 @@ import Firebase
 class FirebaseClient: NSObject {
     
     let ref = FIRDatabase.database().reference()
+    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     
     func getGroupData(completion: (groups: NSDictionary?, error: String?) -> ()) {
         self.ref.observeSingleEventOfType(.Value, withBlock: { snapshot in
@@ -50,8 +51,6 @@ class FirebaseClient: NSObject {
         let userRef = self.ref.child("Users/\(uid)")
         userRef.setValue(newUser.toAnyObject())
         
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        
         appDelegate.uid = uid
         appDelegate.email = email
         appDelegate.phone = phone
@@ -60,7 +59,6 @@ class FirebaseClient: NSObject {
     }
     
     func updateUserInfo(name: String, email: String, phone: String) {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
         let userRef = self.ref.child("Users").child(appDelegate.uid!)
         
@@ -77,8 +75,7 @@ class FirebaseClient: NSObject {
     func addUserDataToGroup(group: String) {
         
         if Methods.sharedInstance.hasConnectivity() {
-        
-            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+
             let groupRef = self.ref.child("Groups").child(group)
             
             let newEmailRef = groupRef.child("Emails").childByAutoId()
