@@ -1,18 +1,25 @@
-# ValleybrookMessenger
-This is an app that I created for potential usage by my church.
+# Valleybrook Messenger
 
-There are two types of users for this app: normal church members and administrators.
+This is an app that I created for potential usage by my church. There are two types of users for this app: normal church members and administrators. Church members are able to login to their account and choose which groups they would like to be a part of and receive communications (emails and texts) from. Administrators can be members of groups as well but they can also add/delete groups, see who is in each group, and send emails and texts to all members of specified groups.
 
-Church members are able to login to their account and choose which groups they would like to be a part of and receive communications (emails and texts) from.
+##Getting Started
 
-Administrators can be members of groups as well but they can also add/delete groups, see who is in each group, and send emails and texts to all members of specified groups.
+You will need to have cocoapods installed in order for the app to run properly. In your terminal, submit this line:
 
-To be an administrator, the admin property of your account must be set to true, which can only be done manually in Firebase. In order to allow you to test the whole app, I've set up an administrator account that you can login as:
+    sudo gem install cocoapods
+    
+This will allow you to use Firebase Pods as dependencies. From here, clone or download the project to get it running in the simulator or on your device.
+
+##Testing
+
+To be an administrator, the admin property of your account must be set to true, which can only be done manually in Firebase. For testing purposes, I've set up an administrator account that you can login as:
 
 email: test@test.com
 password: password
 
 If you login with these credentials, you'll be able to access the entire app. You can also test out creating a new profile by using any random email/password combination.
+
+##View Descriptions
 
 I'll give a brief description of each view below:
 
